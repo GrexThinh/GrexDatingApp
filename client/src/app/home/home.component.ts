@@ -11,7 +11,7 @@ import { RegisterComponent } from "../register/register.component";
 export class HomeComponent {
   registerMode = false;
 
-  registerToggle() {
+registerToggle() {
     this.registerMode = !this.registerMode;
   }
 

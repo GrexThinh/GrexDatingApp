@@ -23,7 +23,10 @@ export class MemberListComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    if (this.memberService.paginatedResult()) this.loadMembers();
+    // if (this.memberService.paginatedResult()) {
+    //   this.loadMembers();
+    // }
+    this.loadMembers();
   }
 
   loadMembers() {

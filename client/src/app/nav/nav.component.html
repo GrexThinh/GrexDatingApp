@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
   <div class="container">
     <a class="navbar-brand" routerLink="/" routerLinkActive="active"
-      >Dating App</a
+      >Fan Booking App</a
     >
 
     <ul class="navbar-nav me-auto mb-2 mb-md-0">
@@ -75,5 +75,9 @@
       <button class="btn btn-success" type="submit">Login</button>
     </form>
     }
+
+    <button class="btn btn-primary ms-4" (click)="toggleTheme()">
+      @if (currentTheme === "slate") {<i class="fa fa-sun-o"></i>} @else {<i class="fa fa-moon-o"></i>}
+    </button>
   </div>
 </nav>

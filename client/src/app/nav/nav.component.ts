@@ -5,6 +5,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { HasRoleDirective } from '../_directives/has-role.directive';
+import { ThemeService } from '../_services/theme.service';
 
 @Component({
   selector: 'app-nav',
@@ -23,6 +24,9 @@ export class NavComponent {
   accountService = inject(AccountService);
   private router = inject(Router);
   private toastr = inject(ToastrService);
+  protected themeService = inject(ThemeService);
+  currentTheme = this.themeService.getTheme();
+
   model: any = {};
 
   login() {
@@ -40,5 +44,11 @@ export class NavComponent {
   logout() {
     this.accountService.logout();
     this.router.navigateByUrl('/');
+  }
+
+  toggleTheme() {
+    const newTheme = this.currentTheme === 'slate' ? 'journal' : 'slate';
+    this.themeService.setTheme(newTheme);
+    this.currentTheme = newTheme;
   }
 }
