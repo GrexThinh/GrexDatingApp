@@ -1,0 +1,94 @@
+<div class="row">
+  <div class="text-center mt-3">
+    <h2>
+      Your groups -
+      {{ groupService.paginatedResult()?.pagination?.totalItems }}
+    </h2>
+  </div>
+  <div class="container mt-3">
+    <form #form="ngForm" class="d-flex mb-3" (ngSubmit)="loadGroups()">
+      <div class="d-flex me-2">
+        <label class="col-form-label">Group type: </label>
+        <select
+          name="type"
+          style="width: 150px"
+          class="form-select ms-1"
+          
+          [(ngModel)]="groupService.groupParams().type"
+        >
+        <option [value]="'All'">
+          {{ 'All' }}
+        </option>
+        <option [value]="'Badmintion'">
+          {{ 'Badmintion' }}
+        </option>
+        <option [value]="'Football'">
+          {{ 'Football' }}
+        </option>
+        <option [value]="'Others'">
+          {{ 'Others' }}
+        </option>
+        </select>
+      </div>
+      <div class="d-flex mx-2">
+        <label class="col-form-label">Location: </label>
+        <input
+          class="form-control ms-1"
+          style="width: 250px"
+          name="location"
+          [(ngModel)]="groupService.groupParams().location"
+        />
+      </div>
+      <div class="d-flex mx-2">
+        <label class="col-form-label">Min number of members: </label>
+        <input
+          type="number"
+          class="form-control ms-1"
+          style="width: 80px"
+          name="minNumberOfMembers"
+          [(ngModel)]="groupService.groupParams().minNumberOfMembers"
+        />
+      </div>
+
+      <button class="btn btn-primary ms-1" type="submit">Apply filters</button>
+      <button (click)="resetFilters()" class="btn btn-info ms-1" type="button">
+        Reset filters
+      </button>
+      <div class="col">
+        <div class="float-end">
+          <button
+            type="button"
+            class="btn btn-primary"
+            name="create"
+            routerLink="/group/create"
+          >
+            <i class="fa fa-plus" aria-hidden="true"></i> Create Group
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  @for (group of groupService.paginatedResult()?.items; track group.id) {
+  <div class="col-2">
+    <app-group-card [group]="group"></app-group-card>
+  </div>
+  }
+</div>
+@if (groupService.paginatedResult()?.pagination) {
+<div class="d-flex justify-content-center">
+  <pagination
+    [boundaryLinks]="true"
+    [totalItems]="(groupService.paginatedResult()?.pagination)!.totalItems"
+    [itemsPerPage]="(groupService.paginatedResult()?.pagination)!.itemsPerPage"
+    (pageChanged)="pageChanged($event)"
+    [(ngModel)]="(groupService.paginatedResult()?.pagination)!.currentPage"
+    [maxSize]="10"
+    previousText="&lsaquo;"
+    nextText="&rsaquo;"
+    firstText="&laquo;"
+    lastText="&raquo;"
+  >
+  </pagination>
+</div>
+
+}

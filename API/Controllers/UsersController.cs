@@ -53,7 +53,7 @@ namespace API.Controllers
 
             if (user == null) return BadRequest("Cannot update user");
 
-            var result = await photoService.AddPhotoAsync(file);
+            var result = await photoService.AddPhotoAsync(file, true);
 
             if (result.Error != null) return BadRequest(result.Error.Message);
 

@@ -4,6 +4,7 @@ using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250330024615_updateFanGroupUser")]
+    partial class updateFanGroupUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -197,10 +200,19 @@ namespace API.Data.Migrations
                     b.Property<byte>("ActiveFlag")
                         .HasColumnType("tinyint");
 
+                    b.Property<string>("CoverImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MainImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -215,25 +227,6 @@ namespace API.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FanGroups");
-                });
-
-            modelBuilder.Entity("API.Entities.FanGroupType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FanGroupTypes");
                 });
 
             modelBuilder.Entity("API.Entities.FanGroupUser", b =>
@@ -335,11 +328,8 @@ namespace API.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AppUserId")
+                    b.Property<int>("AppUserId")
                         .HasColumnType("int");
-
-                    b.Property<Guid?>("FanGroupId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
@@ -354,8 +344,6 @@ namespace API.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
-
-                    b.HasIndex("FanGroupId");
 
                     b.ToTable("Photos");
                 });
@@ -531,15 +519,11 @@ namespace API.Data.Migrations
                 {
                     b.HasOne("API.Entities.AppUser", "AppUser")
                         .WithMany("Photos")
-                        .HasForeignKey("AppUserId");
-
-                    b.HasOne("API.Entities.FanGroup", "FanGroup")
-                        .WithMany("Photos")
-                        .HasForeignKey("FanGroupId");
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AppUser");
-
-                    b.Navigation("FanGroup");
                 });
 
             modelBuilder.Entity("API.Entities.UserLike", b =>
@@ -615,11 +599,6 @@ namespace API.Data.Migrations
                     b.Navigation("Photos");
 
                     b.Navigation("UserRoles");
-                });
-
-            modelBuilder.Entity("API.Entities.FanGroup", b =>
-                {
-                    b.Navigation("Photos");
                 });
 
             modelBuilder.Entity("API.Entities.Group", b =>

@@ -3,3 +3,8 @@ export interface Photo {
   url: string;
   isMain: boolean;
 }
+
+export interface GroupPhoto {
+  file: File;
+  isMainImage: boolean;
+}

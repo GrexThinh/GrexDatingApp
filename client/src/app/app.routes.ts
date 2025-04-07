@@ -13,6 +13,9 @@ import { preventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.gu
 import { memberDetailedResolver } from './_resolvers/member-detailed.resolver';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 import { adminGuard } from './_guards/admin.guard';
+import { GroupListComponent } from './groups/group-list/group-list.component';
+import { GroupCreateComponent } from './groups/group-create/group-create.component';
+import { GroupDetailComponent } from './groups/group-detail/group-detail.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -42,8 +45,22 @@ export const routes: Routes = [
         component: AdminPanelComponent,
         canActivate: [adminGuard],
       },
+      {
+        path: 'group',
+        component: GroupListComponent,
+      },
+      {
+        path: 'group/create',
+        component: GroupCreateComponent,
+      },
+      {
+        path: 'groups/:id',
+        component: GroupDetailComponent,
+        // resolve: { member: memberDetailedResolver },
+      },
     ],
   },
+
   { path: 'errors', component: TestErrorsComponent },
   { path: 'not-found', component: NotFoundComponent },
   { path: 'server-error', component: ServerErrorComponent },

@@ -1,0 +1,43 @@
+<div class="card mb-4" [class.joined-group]="true">
+  <div class="card-img-wrapper">
+    <img
+      [src]="getMainPhotoUrl()"
+      alt="{{ group().name }}"
+      class="card-img-top"
+    />
+    <ul class="list-inline member-icons animate text-center">
+      <li class="list-inline-item">
+        <button routerLink="/groups/{{ group().id }}" class="btn btn-primary">
+          <i class="fa fa-users"></i>
+        </button>
+      </li>
+      <li class="list-inline-item">
+        <button (click)="toggleLike()" class="btn btn-primary">
+          @if (hasLiked()) {<i class="fa fa-times"></i>} @else {
+          <i class="fa fa-sign-in"></i>
+          }
+        </button>
+      </li>
+      @if (hasLiked()) {
+      <li class="list-inline-item">
+        <button
+          routerLink="/groups/{{ group().id }}"
+          [queryParams]="{ tab: 'Messages' }"
+          class="btn btn-primary"
+        >
+          <i class="fa fa-envelope"></i>
+        </button>
+      </li>
+      }
+    </ul>
+  </div>
+  <div class="card-body p-1">
+    <h6 class="card-title text-center mb-1">
+      <span [class.is-online]="true">
+        <i class="fa fa-users me-2"></i>
+      </span>
+      {{ group().name + ', ' + group().location }}
+    </h6>
+    <p class="card-text text-muted text-center">{{ group().type }}</p>
+  </div>
+</div>

@@ -6,4 +6,10 @@
         public string? Url { get; set; }
         public bool IsMain { get; set; }
     }
+
+    public class GroupPhotoCreateDto
+    {
+        public IFormFile File { get; set; } 
+        public bool IsMainImage { get; set; } 
+    }
 }

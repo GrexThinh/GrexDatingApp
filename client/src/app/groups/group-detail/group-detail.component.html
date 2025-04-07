@@ -1,0 +1,74 @@
+<div class="container">
+  <div class="head-content">
+    <carousel
+      [noPause]="false"
+      [isAnimated]="true"
+      [itemsPerSlide]="itemsPerSlide"
+      [singleSlideOffset]="singleSlideOffset"
+      [noWrap]="noWrap"
+      [interval]="1500"
+      [startFromIndex]="0"
+      (slideRangeChange)="onSlideRangeChange($event)"
+    >
+      <slide *ngFor="let slide of slides; let index = index">
+        <img
+          [src]="slide.image"
+          alt="image slide"
+          style="
+            display: block;
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 2%;
+          "
+        />
+        <div class="carousel-caption"></div>
+      </slide>
+    </carousel>
+    <img src="./assets/group.png" alt="group-avatar" class="group-avatar" />
+    <div class="group-info">
+      <div>
+        <h1>{{ "Chelsea Fan" }}</h1>
+        <h5 class="grouh5-description">{{ "99+ Members" }}</h5>
+      </div>
+      <div class="d-flex gap-3 align-items-center">
+        <tabset>
+          <tab heading="Feeds"></tab>
+          <tab heading="Messages"></tab>
+        </tabset>
+        <button type="button" class="btn btn-primary">
+          <i class="fa fa-edit"></i> Edit Group
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row body-content">
+    <div class="col-3">
+      <accordion>
+        <accordion-group heading="Introduction" [isOpen]="true">
+          This content is straight in the template.
+        </accordion-group>
+        <accordion-group heading="Members" [isOpen]="true">
+          <p>Some content</p>
+        </accordion-group>
+        <accordion-group heading="Location" [isOpen]="true">
+          <p>Some content</p>
+        </accordion-group>
+      </accordion>
+    </div>
+    <div class="col-6">
+      <div class="card"></div>
+    </div>
+    <div class="col-3">
+      <accordion>
+        <accordion-group heading="Member Requests" [isOpen]="true">
+          <p>Some content</p>
+        </accordion-group>
+        <accordion-group heading="Incoming events" [isOpen]="true">
+          This content is straight in the template.
+        </accordion-group>
+      </accordion>
+    </div>
+  </div>
+</div>

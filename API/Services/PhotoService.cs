@@ -16,7 +16,7 @@ namespace API.Services
             _cloudinary = new Cloudinary(acc);
         }
 
-        public async Task<ImageUploadResult> AddPhotoAsync(IFormFile file)
+        public async Task<ImageUploadResult> AddPhotoAsync(IFormFile file, bool isAvatar)
         {
             var uploadResult = new ImageUploadResult();
 
@@ -26,9 +26,12 @@ namespace API.Services
                 var uploadParams = new ImageUploadParams
                 {
                     File = new FileDescription(file.FileName, stream),
-                    Transformation = new Transformation().Height(500).Width(500).Crop("fill").Gravity("face"),
                     Folder = "da-net8"
                 };
+                if (isAvatar)
+                {
+                    uploadParams.Transformation = new Transformation().Height(500).Width(500).Crop("fill").Gravity("face");
+                }
                 uploadResult = await _cloudinary.UploadAsync(uploadParams);
             }
             return uploadResult;

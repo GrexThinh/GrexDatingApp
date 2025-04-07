@@ -12,6 +12,9 @@ namespace API.Data
         public DbSet<Message> Messages { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Connection> Connections { get; set; }
+        public DbSet<FanGroup> FanGroups { get; set; }
+        public DbSet<FanGroupUser> FanGroupUsers { get; set; }
+        public DbSet<FanGroupType> FanGroupTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -24,10 +27,10 @@ namespace API.Data
                 .IsRequired();
 
             builder.Entity<AppRole>()
-               .HasMany(ur => ur.UserRoles)
-               .WithOne(u => u.Role)
-               .HasForeignKey(ur => ur.RoleId)
-               .IsRequired();
+                .HasMany(ur => ur.UserRoles)
+                .WithOne(u => u.Role)
+                .HasForeignKey(ur => ur.RoleId)
+                .IsRequired();
 
             builder.Entity<UserLike>()
                 .HasKey(k => new { k.SourceUserId, k.TargetUserId });
@@ -39,10 +42,10 @@ namespace API.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<UserLike>()
-               .HasOne(s => s.TargetUser)
-               .WithMany(l => l.LikedByUsers)
-               .HasForeignKey(s => s.TargetUserId)
-               .OnDelete(DeleteBehavior.NoAction);
+                .HasOne(s => s.TargetUser)
+                .WithMany(l => l.LikedByUsers)
+                .HasForeignKey(s => s.TargetUserId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<Message>()
                 .HasOne(x => x.Recipient)
@@ -50,9 +53,9 @@ namespace API.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Message>()
-               .HasOne(x => x.Sender)
-               .WithMany(x => x.MessagesSent)
-               .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(x => x.Sender)
+                .WithMany(x => x.MessagesSent)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
