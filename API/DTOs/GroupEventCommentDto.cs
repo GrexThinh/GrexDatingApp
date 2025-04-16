@@ -1,6 +1,4 @@
-﻿using static API.ValueObjects.AppValue;
-
-namespace API.DTOs
+﻿namespace API.DTOs
 {
     public class GroupEventCommentDto
     {
@@ -13,12 +11,9 @@ namespace API.DTOs
         public string Content { get; set; } = null!;
         public DateTime SendDate { get; set; }
         public int SenderId { get; set; }
-        public int RecipientId { get; set; }
         public Guid? ParentId { get; set; } = null;
         public bool SenderDeleted { get; set; }
-        public bool RecipientDeleted { get; set; }
         public MemberDto Sender { get; set; }
-        public MemberDto? Recipient { get; set; }
     }
 
     public class GroupEventCommentCreateParams

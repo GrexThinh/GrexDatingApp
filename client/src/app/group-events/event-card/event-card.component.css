@@ -21,3 +21,9 @@
   opacity: 1;
   visibility: visible;
 }
+
+.user-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}

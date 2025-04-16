@@ -1,16 +1,25 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, SimpleChanges } from '@angular/core';
 import { GroupEventService } from '../../_services/group-event.service';
 import { ToastrService } from 'ngx-toastr';
-import { GroupEvent } from '../../_models/groupEvent';
+import { GroupEvent, GroupEventUser } from '../../_models/groupEvent';
 import { GroupEventUserStatus } from '../../_enums/status';
 import { CommonModule, DatePipe, NgClass } from '@angular/common';
 import { getEnumName } from '../../_helpers/enum-utils';
 import { EventCommentComponent } from '../event-comment/event-comment.component';
+import { Member } from '../../_models/member';
+import { GroupEventUserRole } from '../../_enums/role';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @Component({
   selector: 'app-event-card',
   standalone: true,
-  imports: [DatePipe, NgClass, CommonModule, EventCommentComponent],
+  imports: [
+    DatePipe,
+    NgClass,
+    CommonModule,
+    EventCommentComponent,
+    TooltipModule,
+  ],
   templateUrl: './event-card.component.html',
   styleUrl: './event-card.component.css',
 })
@@ -21,7 +30,23 @@ export class EventCardComponent {
   event = input.required<GroupEvent>();
   status = GroupEventUserStatus;
   isViewDetailEvent = false;
+  evtUsers: GroupEventUser[] = [];
+  role = GroupEventUserRole;
   getStatusName = getEnumName;
+  getRoleName = getEnumName;
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['isDetailList']) {
+      if (this.isDetailList()) {
+        console.log('run');
+        this.groupEventService.getGroupEventUsers(this.event().id).subscribe({
+          next: (data) => {
+            this.evtUsers = data;
+          },
+        });
+      }
+    }
+  }
 
   actEvent(status: GroupEventUserStatus) {
     if (this.event().currentUserStatus === null) {

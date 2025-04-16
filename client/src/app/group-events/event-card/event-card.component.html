@@ -64,6 +64,84 @@
           <i class="fa fa-sticky-note text-success"></i>
           {{ event().description }}
         </p>
+
+        <div class="d-flex gap-2">
+          <div>
+            <i class="fa fa-group text-success"></i>
+            {{ evtUsers.length }} members
+          </div>
+          <div class="d-flex gap-1">
+            @for (item of evtUsers; track item.id) {
+            <img
+              src="{{ item.user.photoUrl }}"
+              alt="user-photo"
+              class="user-img"
+              [tooltip]="popTemplate"
+            />
+            <ng-template #popTemplate
+              ><div>
+                {{ item.user.knownAs }} - {{ item.user.age }} yrs -
+                <div
+                  class="badge"
+                  [ngClass]="{
+                    'bg-primary': item.status === status.Joined,
+                    'bg-warning text-dark': item.status === status.Interested,         
+                    'bg-secondary': item.status === status.Waiting,         
+                  }"
+                >
+                  {{ getStatusName(status, item.status) }}
+                </div>
+                -
+                <div
+                  class="badge"
+                  [ngClass]="{
+                    'bg-primary': item.roles.includes(role.Host),
+                    'bg-warning text-dark': item.roles.includes(role.CoHost),            
+                    'bg-secondary': !item.roles.includes(role.Host || role.CoHost),            
+                  }"
+                >
+                  {{ getRoleName(role, item.roles.sort()[0]) ?? "Member" }}
+                </div>
+              </div></ng-template
+            >
+            }
+          </div>
+        </div>
+
+        <!-- <div class="row">
+          @for (item of evtUsers; track item.id) {
+          <div class="col-6">
+            <div class="d-flex gap-3 align-items-center">
+              <img
+                src="{{ item.user.photoUrl }}"
+                alt="user-photo"
+                class="user-img"
+              />
+              <div>
+                <div>
+                  {{ item.user.knownAs }} - {{item.user.age}} yrs
+                </div>
+                
+               <div class="d-flex gap-3">
+                <div class="badge" [ngClass]="{
+                  'bg-primary': item.status === status.Joined,
+                  'bg-warning text-dark': item.status === status.Interested,         
+                 }">
+                {{ getStatusName(status, item.status) }}
+                </div>
+                <div *ngIf="item.roles.includes(role.Host || role.CoHost)" class="badge" [ngClass]="{
+                                    'bg-primary': item.roles.includes(role.Host),
+                                    'bg-warning text-dark': item.roles.includes(role.CoHost),            
+                                  }">
+                  {{ getRoleName(role, item.roles.sort()[0]) ?? "Member" }}
+                </div>
+               </div>
+                
+              </div>
+            </div>
+          </div>
+          }
+        </div> -->
       </div>
     </div>
     @if (event().currentUserStatus == status.Joined && !isViewDetailEvent) {
@@ -75,7 +153,7 @@
       <i class="fa fa-angle-double-down"></i> Load comment
     </button>
     } @if (isViewDetailEvent) {
-      <app-event-comment [eventId]="event().id"></app-event-comment>
+    <app-event-comment [eventId]="event().id"></app-event-comment>
     }
   </div>
 </div>

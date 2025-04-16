@@ -27,6 +27,7 @@ namespace API.Helpers
             CreateMap<FanGroupUpdateDto, FanGroup>();
             CreateMap<GroupEventCreateDto, GroupEvent>();
             CreateMap<GroupEventComment, GroupEventCommentDto>();
+            CreateMap<GroupEventUser, GroupEventUserDto>();
         }
     }
 }

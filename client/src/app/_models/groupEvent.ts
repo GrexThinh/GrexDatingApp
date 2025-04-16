@@ -38,6 +38,19 @@ export interface GroupEventComment {
   sender: Member;
 }
 
+export interface GroupEventUser {
+  id: string;
+  groupEventId: string;
+  description?: string;
+  createDate: string;
+  updateDate: string;
+  userId: number;
+  user: Member;
+  joinDate: string;
+  status: GroupEventUserStatus;
+  roles: GroupEventUserRole[];
+}
+
 export class GroupEvent {
   id = '';
   name = '';

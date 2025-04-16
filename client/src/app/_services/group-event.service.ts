@@ -8,6 +8,7 @@ import {
   GroupEventComment,
   GroupEventCommentCreate,
   GroupEventParams,
+  GroupEventUser,
 } from '../_models/groupEvent';
 import { GroupEventUserStatus } from '../_enums/status';
 
@@ -110,6 +111,12 @@ export class GroupEventService {
   //   };
   //   return this.http.post<any>(this.baseUrl + 'fangroupuser/role', payload);
   // }
+
+  getGroupEventUsers(eventId: string) {
+    return this.http.get<GroupEventUser[]>(
+      this.baseUrl + 'groupeventuser/' + eventId
+    );
+  }
 
   getGroupEventComments(eventId: string) {
     return this.http.get<GroupEventComment[]>(

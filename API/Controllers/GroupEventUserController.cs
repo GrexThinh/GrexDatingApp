@@ -9,6 +9,19 @@ namespace API.Controllers
 {
     public class GroupEventUserController(IUnitOfWork unitOfWork) : BaseApiController
     {
+        [HttpGet("{eventId}")]
+        public async Task<ActionResult<IList<GroupEventUserDto>>> GetUsersByEventId(string eventId)
+        {
+            if (!Guid.TryParse(eventId, out var groupEventId))
+            {
+                return BadRequest("Invalid ID format.");
+            }
+
+            var evtUsers = await unitOfWork.GroupEventUserRepository.GetGroupEventUserByEventIdAsync(groupEventId);
+
+            return Ok(evtUsers);
+        }
+
         [HttpPost("{eventId}/{status}")]
         public async Task<ActionResult> CreateGroupEventUser(string eventId, GroupEventUserStatus status)
         {
