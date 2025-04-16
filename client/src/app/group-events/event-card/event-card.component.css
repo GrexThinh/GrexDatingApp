@@ -1,0 +1,23 @@
+.container {
+  position: relative;
+  img {
+    transition: all 0.3s ease;
+  }
+}
+
+.container:hover {
+  img {
+    transform: scale(1.05);
+  }
+}
+
+.act-btn {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  visibility: hidden;
+}
+
+.container:hover .act-btn {
+  opacity: 1;
+  visibility: visible;
+}

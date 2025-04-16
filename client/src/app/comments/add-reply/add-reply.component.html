@@ -1,0 +1,20 @@
+<form id="replyForm" #replyForm="ngForm" (ngSubmit)="addReply()">
+  <div class="d-flex">
+    <textarea
+      placeholder="Write a reply"
+      name="content"
+      [(ngModel)]="reply.content"
+      class="form-control"
+      style="border-top-right-radius: 0; border-bottom-right-radius: 0"
+    ></textarea>
+    <button
+      [disabled]="!replyForm.dirty"
+      form="replyForm"
+      type="submit"
+      class="btn btn-primary"
+      style="border-top-left-radius: 0; border-bottom-left-radius: 0"
+    >
+      Add
+    </button>
+  </div>
+</form>

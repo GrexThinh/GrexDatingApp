@@ -280,6 +280,134 @@ namespace API.Data.Migrations
                     b.ToTable("Groups");
                 });
 
+            modelBuilder.Entity("API.Entities.GroupEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte>("ActiveFlag")
+                        .HasColumnType("tinyint");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EventEndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("EventStartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GroupEvents");
+                });
+
+            modelBuilder.Entity("API.Entities.GroupEventComment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte>("ActiveFlag")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("GroupEventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("SendDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("SenderDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("SenderId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupEventId");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("GroupEventComments");
+                });
+
+            modelBuilder.Entity("API.Entities.GroupEventUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte>("ActiveFlag")
+                        .HasColumnType("tinyint");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("GroupEventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("JoinDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Roles")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupEventId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GroupEventUsers");
+                });
+
             modelBuilder.Entity("API.Entities.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -341,6 +469,9 @@ namespace API.Data.Migrations
                     b.Property<Guid?>("FanGroupId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("GroupEventId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
@@ -356,6 +487,8 @@ namespace API.Data.Migrations
                     b.HasIndex("AppUserId");
 
                     b.HasIndex("FanGroupId");
+
+                    b.HasIndex("GroupEventId");
 
                     b.ToTable("Photos");
                 });
@@ -508,6 +641,51 @@ namespace API.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("API.Entities.GroupEventComment", b =>
+                {
+                    b.HasOne("API.Entities.GroupEvent", "GroupEvent")
+                        .WithMany("Comments")
+                        .HasForeignKey("GroupEventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.GroupEventComment", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("API.Entities.AppUser", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("GroupEvent");
+
+                    b.Navigation("Parent");
+
+                    b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("API.Entities.GroupEventUser", b =>
+                {
+                    b.HasOne("API.Entities.GroupEvent", "GroupEvent")
+                        .WithMany()
+                        .HasForeignKey("GroupEventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GroupEvent");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("API.Entities.Message", b =>
                 {
                     b.HasOne("API.Entities.AppUser", "Recipient")
@@ -537,9 +715,15 @@ namespace API.Data.Migrations
                         .WithMany("Photos")
                         .HasForeignKey("FanGroupId");
 
+                    b.HasOne("API.Entities.GroupEvent", "GroupEvent")
+                        .WithMany("Photos")
+                        .HasForeignKey("GroupEventId");
+
                     b.Navigation("AppUser");
 
                     b.Navigation("FanGroup");
+
+                    b.Navigation("GroupEvent");
                 });
 
             modelBuilder.Entity("API.Entities.UserLike", b =>
@@ -625,6 +809,13 @@ namespace API.Data.Migrations
             modelBuilder.Entity("API.Entities.Group", b =>
                 {
                     b.Navigation("Connections");
+                });
+
+            modelBuilder.Entity("API.Entities.GroupEvent", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }

@@ -8,3 +8,7 @@ export interface GroupPhoto {
   file: File;
   isMainImage: boolean;
 }
+
+export interface GroupEventPhoto {
+  file: File;
+}

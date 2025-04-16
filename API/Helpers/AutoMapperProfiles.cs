@@ -24,6 +24,9 @@ namespace API.Helpers
             CreateMap<DateTime?, DateTime?>().ConvertUsing(d => d.HasValue ? DateTime.SpecifyKind(d.Value, DateTimeKind.Utc) : null);
             CreateMap<FanGroupCreateDto, FanGroup>();
             CreateMap<FanGroup, FanGroupDto>();
+            CreateMap<FanGroupUpdateDto, FanGroup>();
+            CreateMap<GroupEventCreateDto, GroupEvent>();
+            CreateMap<GroupEventComment, GroupEventCommentDto>();
         }
     }
 }

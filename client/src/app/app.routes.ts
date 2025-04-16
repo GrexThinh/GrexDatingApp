@@ -16,6 +16,7 @@ import { adminGuard } from './_guards/admin.guard';
 import { GroupListComponent } from './groups/group-list/group-list.component';
 import { GroupCreateComponent } from './groups/group-create/group-create.component';
 import { GroupDetailComponent } from './groups/group-detail/group-detail.component';
+import { GroupEditComponent } from './groups/group-edit/group-edit.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -46,12 +47,17 @@ export const routes: Routes = [
         canActivate: [adminGuard],
       },
       {
-        path: 'group',
+        path: 'groups',
         component: GroupListComponent,
       },
       {
-        path: 'group/create',
+        path: 'groups/create',
         component: GroupCreateComponent,
+      },
+      {
+        path: 'groups/edit/:id',
+        component: GroupEditComponent,
+        canDeactivate: [preventUnsavedChangesGuard],
       },
       {
         path: 'groups/:id',

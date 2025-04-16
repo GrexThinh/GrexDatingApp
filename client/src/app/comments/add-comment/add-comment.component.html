@@ -1,0 +1,30 @@
+<div class="mb-1">
+  <div class="d-flex">
+    <div class="image-container">
+      <img class="display-image" src="{{this.currentUser?.photoUrl}}" alt="photo" />
+    </div>
+    <div class="display-name">{{ this.currentUser?.knownAs }}</div>
+  </div>
+
+  <form id="commentForm" #commentForm="ngForm" (ngSubmit)="addComment()">
+    <div class="d-flex">
+      <textarea
+        id="addComment"
+        placeholder="Write a comment"
+        name="content"
+        [(ngModel)]="comment.content"
+        class="form-control"
+        style="border-top-right-radius: 0; border-bottom-right-radius: 0"
+      ></textarea>
+      <button
+        [disabled]="!commentForm.dirty"
+        form="commentForm"
+        type="submit"
+        class="btn btn-primary"
+        style="border-top-left-radius: 0; border-bottom-left-radius: 0"
+      >
+        Add
+      </button>
+    </div>
+  </form>
+</div>

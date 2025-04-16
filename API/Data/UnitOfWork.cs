@@ -3,7 +3,7 @@
 namespace API.Data
 {
     public class UnitOfWork(DataContext context, IUserRepository userRepository, IMessageRepository messageRepository, ILikesRepository likesRepository,
-        IFanGroupRepository fanGroupRepository, IFanGroupUserRepository fanGroupUserRepository) : IUnitOfWork
+        IFanGroupRepository fanGroupRepository, IFanGroupUserRepository fanGroupUserRepository, IGroupEventRepository groupEventRepository, IGroupEventUserRepository groupEventUserRepository, IGroupEventCommentRepository groupEventCommentRepository) : IUnitOfWork
     {
         public IUserRepository UserRepository => userRepository;
 
@@ -13,6 +13,9 @@ namespace API.Data
 
         public IFanGroupRepository FanGroupRepository => fanGroupRepository;
         public IFanGroupUserRepository FanGroupUserRepository => fanGroupUserRepository;
+        public IGroupEventRepository GroupEventRepository => groupEventRepository;
+        public IGroupEventUserRepository GroupEventUserRepository => groupEventUserRepository;
+        public IGroupEventCommentRepository GroupEventCommentRepository => groupEventCommentRepository;
 
         public async Task<bool> Complete()
         {

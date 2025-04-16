@@ -1,0 +1,39 @@
+<form id="createForm" #createForm="ngForm" (ngSubmit)="createPost()">
+  <textarea
+    name=""
+    id=""
+    rows="3"
+    class="form-control"
+    placeholder="What's on your mind?"
+  ></textarea>
+
+  <div>
+    <div class="row g-1">
+      @for (photo of photoUrls; track $index) {
+      <div class="col-4">
+        <img
+          [src]="photo"
+          alt="photo of main photo"
+          class="img-thumbnail main-img"
+        />
+      </div>
+      }
+    </div>
+    <div>
+      <input
+        id="mainFileInput"
+        type="file"
+        multiple
+        (change)="onFileChange($event)"
+        name="photos"
+      />
+    </div>
+  </div>
+  <label for="mainFileInput" class="btn btn-primary w-100 btn-sm"
+    >Upload photos</label
+  >
+  <div class="d-flex gap-2 justify-content-end mt-1">
+    <button type="submit" class="btn btn-secondary">Cancel</button
+    ><button type="submit" class="btn btn-success">Post</button>
+  </div>
+</form>

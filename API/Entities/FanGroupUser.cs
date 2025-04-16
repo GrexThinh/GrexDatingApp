@@ -12,6 +12,6 @@ namespace API.Entities
         public DateTime JoinDate { get; set; } = DateTime.UtcNow;
         public byte ActiveFlag { get; set; }
         public GroupUserStatus Status { get; set; }
-        public ICollection<GroupRole> Roles { get; set; } = new List<GroupRole>();
+        public IList<GroupRole> Roles { get; set; } = [];
     }
 }

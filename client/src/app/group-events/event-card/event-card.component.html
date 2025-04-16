@@ -1,0 +1,140 @@
+@if(isDetailList()) {
+<div class="container" type="button">
+  <div class="card mb-3">
+    <div class="position-relative">
+      <img
+        src="{{ event().photos[0].url || './assets/group.png' }}"
+        class="card-img-top"
+        style="height: 170px"
+        alt="event-image"
+      />
+      <div class="act-btn position-absolute bottom-0 end-0 d-flex gap-2">
+        @if (event().currentUserStatus !== status.Joined) { @if
+        (event().currentUserStatus === null) {
+        <button
+          class="btn btn-warning text-dark"
+          (click)="actEvent(status.Interested)"
+        >
+          <i class="fa fa-star-o"></i> Interest
+        </button>
+        } @else if (event().currentUserStatus === status.Interested) {
+        <button
+          class="btn btn-warning text-dark"
+          (click)="actEvent(status.Interested)"
+        >
+          <i class="fa fa-times"></i> Cancel interest
+        </button>
+        } } @if (event().currentUserStatus !== status.Interested) {
+        @if(event().currentUserStatus === null) {
+        <button class="btn btn-primary" (click)="actEvent(status.Joined)">
+          <i class="fa fa-sign-in"></i> Join
+        </button>
+        } @else if (event().currentUserStatus === status.Joined) {
+        <button class="btn btn-primary" (click)="actEvent(status.Joined)">
+          <i class="fa fa-times"></i> Cancel join
+        </button>
+        } }
+      </div>
+    </div>
+    <div class="card-body p-0">
+      <div class="p-3">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="card-title">{{ event().name }}</h5>
+          <div
+            *ngIf="event().currentUserStatus"
+            class="badge"
+            [ngClass]="{
+              'bg-primary': event().currentUserStatus === status.Joined,
+              'bg-warning text-dark':
+                event().currentUserStatus === status.Interested
+            }"
+          >
+            {{ getStatusName(status, event().currentUserStatus) }}
+          </div>
+        </div>
+        <p class="card-text">
+          <i class="fa fa-calendar-check-o text-success"></i>
+          {{ event().eventStartTime | date }} -
+          {{ event().eventEndTime | date }}
+        </p>
+        <p class="card-text">
+          <i class="fa fa-map-marker text-success"></i> {{ event().location }}
+        </p>
+        <p class="card-text">
+          <i class="fa fa-sticky-note text-success"></i>
+          {{ event().description }}
+        </p>
+      </div>
+    </div>
+    @if (event().currentUserStatus == status.Joined && !isViewDetailEvent) {
+    <button
+      class="btn btn-success btn-sm mt-2"
+      style="border-top-left-radius: 0; border-top-right-radius: 0"
+      (click)="handleViewDetailEvent()"
+    >
+      <i class="fa fa-angle-double-down"></i> Load comment
+    </button>
+    } @if (isViewDetailEvent) {
+      <app-event-comment [eventId]="event().id"></app-event-comment>
+    }
+  </div>
+</div>
+} @else {
+<div class="card bg-dark text-light" type="button">
+  <img
+    src="{{ event().photos[0].url || './assets/group.png' }}"
+    class="card-img opacity-50"
+    style="height: 110px"
+    alt="event-image"
+  />
+  <div class="card-img-overlay">
+    <div class="d-flex justify-content-between align-items-center">
+      <h6 class="card-title fw-bold text-truncate me-1">{{ event().name }}</h6>
+      <div class="d-flex gap-1">
+        @if (event().currentUserStatus !== status.Joined) {
+        <button
+          class="btn btn-warning btn-sm"
+          (click)="actEvent(status.Interested)"
+        >
+          <i
+            class="fa"
+            [ngClass]="{
+              'fa-star-o': event().currentUserStatus === null,
+              'fa-times text-dark':
+                event().currentUserStatus === status.Interested
+            }"
+          ></i>
+        </button>
+        } @if (event().currentUserStatus !== status.Interested) {
+        <button
+          class="btn btn-primary btn-sm"
+          (click)="actEvent(status.Joined)"
+        >
+          <i
+            class="fa"
+            [ngClass]="{
+              'fa-sign-in': event().currentUserStatus === null,
+              'fa-times': event().currentUserStatus === status.Joined
+            }"
+          ></i>
+        </button>
+        }
+      </div>
+    </div>
+    <div
+      *ngIf="event().currentUserStatus"
+      class="badge"
+      [ngClass]="{
+        'bg-primary': event().currentUserStatus === status.Joined,
+        'bg-warning text-dark': event().currentUserStatus === status.Interested
+      }"
+    >
+      {{ getStatusName(status, event().currentUserStatus) }}
+    </div>
+    <div class="card-text mt-2" style="font-size: smaller">
+      {{ event().eventStartTime | date : "short" }} -
+      {{ event().eventEndTime | date : "short" }}
+    </div>
+  </div>
+</div>
+}

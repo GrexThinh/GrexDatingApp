@@ -1,0 +1,50 @@
+<div class="d-flex flex-column gap-2">
+  @if (isDetailList()) {
+  <form #form="ngForm" class="d-flex align-items-center" (ngSubmit)="loadEvents()">
+    <i class="fa fa-filter" aria-hidden="true"></i>
+    <div class="d-flex input-group-sm">
+      <input
+        placeholder="Name"
+        class="form-control ms-1"
+        name="location"
+        [(ngModel)]="groupEventService.groupParams().name"
+      />
+    </div>
+    <div class="d-flex ms-1 input-group-sm">
+      <input
+        placeholder="Location"
+        class="form-control"
+        name="location"
+        [(ngModel)]="groupEventService.groupParams().location"
+      />
+    </div>
+    <div class="d-flex ms-1 input-group-sm">
+      <input
+        type="text"
+        placeholder="Choose date time"
+        class="form-control"
+        name="startEndTime"
+        bsDaterangepicker
+        [(ngModel)]="groupEventService.groupParams().startEndTime"
+        required
+        [bsConfig]="{
+          containerClass: 'theme-dark-blue',
+          withTimepicker: true,
+          showTodayButton: true,
+          todayPosition: 'center'
+        }"
+      />
+    </div>
+    <button class="btn btn-primary btn-sm ms-1" type="submit">Apply</button>
+    <button (click)="resetFilters()" class="btn btn-info btn-sm ms-1" type="button">
+      Reset
+    </button>
+  </form>
+  } 
+  @for (event of groupEventService.paginatedResult()?.items; track event.id) {
+  <app-event-card
+    [event]="event"
+    [isDetailList]="isDetailList()"
+  ></app-event-card>
+  }
+</div>

@@ -1,0 +1,15 @@
+.image-container {
+    margin: 5px;
+}
+
+.display-image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.display-name {
+    padding: 5px 5px 0 5px;
+    font-size: large;
+    font-weight: 600;
+}

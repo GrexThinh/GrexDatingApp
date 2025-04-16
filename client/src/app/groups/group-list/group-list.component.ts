@@ -4,20 +4,30 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { GroupCardComponent } from '../group-card/group-card.component';
 import { RouterLink } from '@angular/router';
 import { GroupService } from '../../_services/group.service';
+import { GroupUserStatus } from '../../_enums/status';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-group-list',
   standalone: true,
-  imports: [FormsModule, PaginationModule, GroupCardComponent, RouterLink],
+  imports: [
+    FormsModule,
+    PaginationModule,
+    GroupCardComponent,
+    RouterLink,
+    CommonModule,
+  ],
   templateUrl: './group-list.component.html',
   styleUrl: './group-list.component.css',
 })
 export class GroupListComponent {
   groupService = inject(GroupService);
-  typeOptions = ['Badmintion', 'Football', 'Others'];
+  typeOptions = ['Badminton', 'Football', 'Others'];
+  statusOptions = GroupUserStatus;
 
   constructor() {
     this.groupService.groupParams().type = 'All';
+    this.groupService.groupParams().status = 'All';
   }
 
   ngOnInit(): void {

@@ -27,17 +27,9 @@ export class GroupCreateComponent {
   coverPhotoUrl: string | ArrayBuffer | null = './assets/group.png';
 
   hasBaseDropZoneOver = false;
-  group: FanGroup = {
-    name: '',
-    description: '',
-    id: '',
-    type: '',
-    location: '',
-    groupPhotos: [],
-    photos: [],
-  };
+  group: FanGroup = new FanGroup();
 
-  typeOptions = ['Badmintion', 'Football', 'Others'];
+  typeOptions = ['Badminton', 'Football', 'Others'];
 
   handleUploadFile(file: File, isMainImage: boolean = false) {
     if (isMainImage) {
@@ -79,6 +71,9 @@ export class GroupCreateComponent {
       next: (_) => {
         this.toastr.success('Group created successfully!');
         this.createForm?.reset(this.group);
+      },
+      error: (_) => {
+        this.toastr.error('Failed to create group');
       },
     });
   }

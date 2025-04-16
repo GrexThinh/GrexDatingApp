@@ -11,14 +11,29 @@
         public enum GroupRole : byte
         {
             Admin = 1,
-            Member = 2,
-            Moderator = 3
+            Moderator = 2,
+            Member = 3,
         }
         public enum GroupUserStatus : byte
         {
             Waiting = 1,
             Joined = 2,
-            Banned = 3,
+            Rejected = 3,
+            Banned = 4,
+        }
+        public enum GroupEventUserStatus : byte
+        {
+            Waiting = 1,
+            Joined = 2,
+            Rejected = 3,
+            Banned = 4,
+            Interested = 5,
+        }
+        public enum GroupEventRole : byte
+        {
+            Host = 1,
+            CoHost = 2,
+            Member = 3,
         }
     }
 }

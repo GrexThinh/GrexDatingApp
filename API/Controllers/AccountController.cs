@@ -26,6 +26,7 @@ namespace API.Controllers
 
             return new UserDto
             {
+                Id = user.Id,
                 Username = user.UserName,
                 Token = await tokenService.CreateToken(user),
                 KnownAs = user.KnownAs,
@@ -48,6 +49,7 @@ namespace API.Controllers
 
             return new UserDto
             {
+                Id = user.Id,
                 Username = user.UserName,
                 KnownAs = user.KnownAs,
                 Token = await tokenService.CreateToken(user),

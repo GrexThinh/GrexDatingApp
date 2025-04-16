@@ -13,11 +13,27 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FanGroupDto>>> GetFanGroups([FromQuery] FanGroupParams groupParams)
         {
-            var groups = await unitOfWork.FanGroupRepository.GetFanGroupsAsync(groupParams);
+            int currentUserId = User.GetUserId();
+            var groups = await unitOfWork.FanGroupRepository.GetFanGroupsAsync(groupParams, currentUserId);
 
             Response.AddPaginationHeader(groups);
 
             return Ok(groups);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<FanGroupDto>> GetFanGroupById(string id)
+        {
+            if (!Guid.TryParse(id, out var groupId))
+            {
+                return BadRequest("Invalid ID format.");
+            }
+
+            var group = await unitOfWork.FanGroupRepository.GetFanGroupWithUserByIdAsync(groupId);
+
+            if (group == null) return NotFound();
+
+            return Ok(group);
         }
 
         [HttpPost]
@@ -66,6 +82,25 @@ namespace API.Controllers
             }
             
             return BadRequest("Failed to create group");
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateGroup(string id, FanGroupUpdateDto groupUpdateDto)
+        {
+            if (!Guid.TryParse(id, out var groupId))
+            {
+                return BadRequest("Invalid ID format.");
+            }
+
+            var group = await unitOfWork.FanGroupRepository.GetFanGroupByIdAsync(groupId);
+
+            if (group == null) return BadRequest("Could not find group");
+
+            mapper.Map(groupUpdateDto, group);
+
+            if (await unitOfWork.Complete()) return NoContent();
+
+            return BadRequest("Failed to update the group");
         }
 
     }

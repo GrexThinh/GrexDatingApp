@@ -1,0 +1,103 @@
+<div class="d-flex justify-content-between">
+  <h3>Edit your group</h3>
+  <button type="submit" class="btn btn-success" routerLink="/groups/{{group?.id}}">
+    <i class="fa fa-list-alt"></i> Go to group
+  </button>
+</div>
+
+@if (group) {
+<form id="updateForm" #updateForm="ngForm" (ngSubmit)="updateGroup()">
+  <div class="row">
+    <div class="col-2">
+      <h5 class="mt-3">Main photo</h5>
+      <div>
+        <img
+          [src]="mainPhotoUrl"
+          alt="photo of main photo"
+          class="img-thumbnail main-img"
+        />
+        <div>
+          <input
+            id="mainFileInput"
+            type="file"
+            multiple
+            (change)="onFileChange($event, true)"
+            name="photos"
+          />
+        </div>
+      </div>
+      <label for="mainFileInput" class="btn btn-primary w-100 mt-1"
+        >Upload main photo</label
+      >
+    </div>
+    <div class="col-2">
+      <h5 class="mt-3">Cover photos</h5>
+      <div>
+        <img
+          [src]="coverPhotoUrl"
+          alt="photo of cover photo"
+          class="img-thumbnail cover-img"
+        />
+        <div>
+          <input
+            id="coverFileInput"
+            type="file"
+            multiple
+            (change)="onFileChange($event, false)"
+            name="photos"
+          />
+        </div>
+      </div>
+      <label for="coverFileInput" class="btn btn-primary w-100 mt-1"
+        >Upload cover photos</label
+      >
+    </div>
+
+    <div class="col-8 ps-5">
+      <h5 class="mt-3">Name</h5>
+      <input
+        class="form-control"
+        name="name"
+        [(ngModel)]="group.name"
+        required="true"
+      />
+      <h5 class="mt-3">Type</h5>
+      <select
+        name="type"
+        class="form-select ms-1"
+        [(ngModel)]="group.type"
+        required
+      >
+        <option *ngFor="let option of typeOptions" [value]="option">
+          {{ option }}
+        </option>
+      </select>
+      <h5 class="mt-3">Location</h5>
+      <input
+        class="form-control"
+        name="location"
+        [(ngModel)]="group.location"
+        required="true"
+      />
+      <h5 class="mt-3">Description</h5>
+      <textarea
+        class="form-control"
+        name="description"
+        [(ngModel)]="group.description"
+        rows="2"
+      ></textarea>
+
+      <div class="mt-3 text-end">
+        <button
+          [disabled]="!updateForm.dirty"
+          form="updateForm"
+          type="submit"
+          class="btn btn-success"
+        >
+          Update group
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+}

@@ -15,6 +15,9 @@ namespace API.Data
         public DbSet<FanGroup> FanGroups { get; set; }
         public DbSet<FanGroupUser> FanGroupUsers { get; set; }
         public DbSet<FanGroupType> FanGroupTypes { get; set; }
+        public DbSet<GroupEvent> GroupEvents { get; set; }
+        public DbSet<GroupEventUser> GroupEventUsers { get; set; }
+        public DbSet<GroupEventComment> GroupEventComments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -56,6 +59,18 @@ namespace API.Data
                 .HasOne(x => x.Sender)
                 .WithMany(x => x.MessagesSent)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<GroupEventComment>()
+                .HasOne(g => g.Sender)
+                .WithMany()
+                .HasForeignKey(g => g.SenderId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<GroupEventComment>()
+                .HasOne(g => g.Parent)
+                .WithMany()
+                .HasForeignKey(g => g.ParentId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

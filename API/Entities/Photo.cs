@@ -15,5 +15,8 @@ namespace API.Entities
 
         public Guid? FanGroupId { get; set; } = null;
         public FanGroup FanGroup { get; set; } = null!;
+
+        public Guid? GroupEventId { get; set; } = null;
+        public GroupEvent GroupEvent { get; set; } = null!;
     }
 }

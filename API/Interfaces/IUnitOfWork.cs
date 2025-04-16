@@ -7,6 +7,9 @@
         ILikesRepository LikesRepository { get; }
         IFanGroupRepository FanGroupRepository { get; }
         IFanGroupUserRepository FanGroupUserRepository { get; }
+        IGroupEventRepository GroupEventRepository { get; }
+        IGroupEventUserRepository GroupEventUserRepository { get; }
+        IGroupEventCommentRepository GroupEventCommentRepository { get; }
         Task<bool> Complete();
         bool HasChanges();
     }

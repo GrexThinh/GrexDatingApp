@@ -1,0 +1,18 @@
+<div class="d-flex">
+    <div class="image-container">
+        <img class="display-image" [src]="reply().senderPhotoUrl" [alt]="reply().name" />
+    </div>
+    <div>
+        <div class="display-name">{{reply().name}}</div>
+        <div class="display-comment">{{reply().content}}</div>
+       <div class="d-flex gap-3 px-1">
+        <div class="fs-6 text-secondary">{{reply().sendDate | timeago}}</div>
+        <div (click)="replyBtnHandler()" type="button" class="fs-6 text-primary">Reply</div>
+       </div>
+        <app-add-reply *ngIf="isAddReply" [parentComment]="reply()" (addedReply)="onAddedReply($event)"></app-add-reply>
+    </div>
+</div>
+
+<div class="reply-container" *ngIf="reply()['reply'].length > 0">
+    <app-display-reply *ngFor="let reply of reply()['reply']" [reply]="reply"></app-display-reply>
+</div>

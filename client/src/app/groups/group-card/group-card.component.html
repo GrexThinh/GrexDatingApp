@@ -6,19 +6,23 @@
       class="card-img-top"
     />
     <ul class="list-inline member-icons animate text-center">
+      @if (hasJoined()) {
       <li class="list-inline-item">
         <button routerLink="/groups/{{ group().id }}" class="btn btn-primary">
           <i class="fa fa-users"></i>
         </button>
       </li>
+    }
+      @if (group().currentUserStatus != statusOptions.Banned) {
       <li class="list-inline-item">
-        <button (click)="toggleLike()" class="btn btn-primary">
-          @if (hasLiked()) {<i class="fa fa-times"></i>} @else {
-          <i class="fa fa-sign-in"></i>
-          }
+        <button (click)="toggleJoin()" class="btn btn-primary">
+          @if (hasJoined()) {<i class="fa fa-times"></i>} @else if
+          (group().currentUserStatus == statusOptions.Waiting) {
+          <i class="fa fa-dot-circle-o"></i>
+          } @else {<i class="fa fa-sign-in"></i>}
         </button>
       </li>
-      @if (hasLiked()) {
+      } @if (hasJoined()) {
       <li class="list-inline-item">
         <button
           routerLink="/groups/{{ group().id }}"
@@ -36,7 +40,7 @@
       <span [class.is-online]="true">
         <i class="fa fa-users me-2"></i>
       </span>
-      {{ group().name + ', ' + group().location }}
+      {{ group().name + ", " + group().location }}
     </h6>
     <p class="card-text text-muted text-center">{{ group().type }}</p>
   </div>

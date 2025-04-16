@@ -1,0 +1,4 @@
+<div class="p-2 overflow-y-auto" style="max-height: 400px;">
+    <app-add-comment [eventId]="eventId()" (addedComment)="onAddedComment($event)"></app-add-comment>
+    <app-display-comment *ngFor="let comment of comments" [comment]="comment" (addedReply)="onAddedComment($event)"></app-display-comment>
+</div>
