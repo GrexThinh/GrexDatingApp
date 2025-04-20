@@ -12,3 +12,7 @@ export interface GroupPhoto {
 export interface GroupEventPhoto {
   file: File;
 }
+
+export interface GroupPostPhoto {
+  file: File;
+}

@@ -9,10 +9,10 @@
         <div class="fs-6 text-secondary">{{reply().sendDate | timeago}}</div>
         <div (click)="replyBtnHandler()" type="button" class="fs-6 text-primary">Reply</div>
        </div>
-        <app-add-reply *ngIf="isAddReply" [parentComment]="reply()" (addedReply)="onAddedReply($event)"></app-add-reply>
+        <app-add-reply *ngIf="isAddReply" [commentType]="commentType()" [parentComment]="reply()" (addedReply)="onAddedReply($event)"></app-add-reply>
     </div>
 </div>
 
 <div class="reply-container" *ngIf="reply()['reply'].length > 0">
-    <app-display-reply *ngFor="let reply of reply()['reply']" [reply]="reply"></app-display-reply>
+    <app-display-reply *ngFor="let reply of reply()['reply']" [commentType]="commentType()" [reply]="reply"></app-display-reply>
 </div>

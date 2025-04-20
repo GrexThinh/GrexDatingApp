@@ -10,7 +10,7 @@ namespace API.Controllers
     public class GroupEventCommentController(IUnitOfWork unitOfWork, IMapper mapper) : BaseApiController
     {
         [HttpGet("{eventId}")]
-        public async Task<ActionResult<IList<GroupEventCommentDto>>> GetCommentsByEventId(string eventId, GroupEventUserStatus status)
+        public async Task<ActionResult<IList<GroupEventCommentDto>>> GetCommentsByEventId(string eventId)
         {
             if (!Guid.TryParse(eventId, out var groupEventId))
             {

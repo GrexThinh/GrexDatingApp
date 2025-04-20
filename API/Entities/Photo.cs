@@ -18,5 +18,8 @@ namespace API.Entities
 
         public Guid? GroupEventId { get; set; } = null;
         public GroupEvent GroupEvent { get; set; } = null!;
+
+        public Guid? GroupPostId { get; set; } = null;
+        public GroupPost GroupPost { get; set; } = null!;
     }
 }

@@ -27,6 +27,9 @@ namespace API.Extensions
             services.AddScoped<IGroupEventRepository, GroupEventRepository>();
             services.AddScoped<IGroupEventUserRepository, GroupEventUserRepository>();
             services.AddScoped<IGroupEventCommentRepository, GroupEventCommentRepository>();
+            services.AddScoped<IGroupPostRepository, GroupPostRepository>();
+            services.AddScoped<IGroupPostCommentRepository, GroupPostCommentRepository>();
+            services.AddScoped<IGroupPostReactionRepository, GroupPostReactionRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<LogUserActivity>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

@@ -8,10 +8,6 @@
     border-radius: 50%;
 }
 
-.info-container {
-    display: flex;
-}
-
 .display-name {
     padding: 5px 5px 0 5px;
     font-size: large;

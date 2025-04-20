@@ -1,3 +1,9 @@
+.display-user-image {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
 .main-img {
     width: 100%;
     height: 120px;

@@ -107,41 +107,6 @@
             }
           </div>
         </div>
-
-        <!-- <div class="row">
-          @for (item of evtUsers; track item.id) {
-          <div class="col-6">
-            <div class="d-flex gap-3 align-items-center">
-              <img
-                src="{{ item.user.photoUrl }}"
-                alt="user-photo"
-                class="user-img"
-              />
-              <div>
-                <div>
-                  {{ item.user.knownAs }} - {{item.user.age}} yrs
-                </div>
-                
-               <div class="d-flex gap-3">
-                <div class="badge" [ngClass]="{
-                  'bg-primary': item.status === status.Joined,
-                  'bg-warning text-dark': item.status === status.Interested,         
-                 }">
-                {{ getStatusName(status, item.status) }}
-                </div>
-                <div *ngIf="item.roles.includes(role.Host || role.CoHost)" class="badge" [ngClass]="{
-                                    'bg-primary': item.roles.includes(role.Host),
-                                    'bg-warning text-dark': item.roles.includes(role.CoHost),            
-                                  }">
-                  {{ getRoleName(role, item.roles.sort()[0]) ?? "Member" }}
-                </div>
-               </div>
-                
-              </div>
-            </div>
-          </div>
-          }
-        </div> -->
       </div>
     </div>
     @if (event().currentUserStatus == status.Joined && !isViewDetailEvent) {
@@ -158,14 +123,8 @@
   </div>
 </div>
 } @else {
-<div class="card bg-dark text-light" type="button">
-  <img
-    src="{{ event().photos[0].url || './assets/group.png' }}"
-    class="card-img opacity-50"
-    style="height: 110px"
-    alt="event-image"
-  />
-  <div class="card-img-overlay">
+<div class="card border-danger mb-2">
+  <div class="card-header">
     <div class="d-flex justify-content-between align-items-center">
       <h6 class="card-title fw-bold text-truncate me-1">{{ event().name }}</h6>
       <div class="d-flex gap-1">
@@ -199,19 +158,34 @@
         }
       </div>
     </div>
-    <div
-      *ngIf="event().currentUserStatus"
-      class="badge"
-      [ngClass]="{
-        'bg-primary': event().currentUserStatus === status.Joined,
-        'bg-warning text-dark': event().currentUserStatus === status.Interested
-      }"
-    >
-      {{ getStatusName(status, event().currentUserStatus) }}
-    </div>
-    <div class="card-text mt-2" style="font-size: smaller">
-      {{ event().eventStartTime | date : "short" }} -
-      {{ event().eventEndTime | date : "short" }}
+  </div>
+  <div class="card bg-dark text-light" type="button" style="border-radius: 0">
+    <img
+      src="{{ event().photos[0].url || './assets/group.png' }}"
+      class="card-img opacity-50"
+      style="height: 120px;border-radius: 0"
+      alt="event-image"
+    />
+    <div class="card-img-overlay">
+      <div class="card-text" style="font-size: smaller">
+        <i class="fa fa-calendar-check-o"></i> {{ event().eventStartTime | date : "short" }} -
+        {{ event().eventEndTime | date : "short" }}
+      </div>
+      <div class="card-text mt-2" style="font-size: smaller">
+      <i class="fa fa-map-marker"></i> {{ event().location }}
+      </div>
+      <div *ngIf="event().currentUserStatus" class="text-end">
+        <div
+          class="card-text badge"
+          [ngClass]="{
+            'bg-primary': event().currentUserStatus === status.Joined,
+            'bg-warning text-dark':
+              event().currentUserStatus === status.Interested
+          }"
+        >
+          {{ getStatusName(status, event().currentUserStatus) }}
+        </div>
+      </div>
     </div>
   </div>
 </div>

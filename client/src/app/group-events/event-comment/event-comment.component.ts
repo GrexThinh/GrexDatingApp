@@ -5,10 +5,12 @@ import { map } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { GroupEventService } from '../../_services/group-event.service';
 import {
+  CommentCreate,
   GroupEventComment,
-  GroupEventCommentCreate,
-  MappedGroupEventComment,
+  MappedComment,
 } from '../../_models/groupEvent';
+import { CommentType } from '../../_enums/common';
+import { PostingComment } from '../../_models/common';
 
 @Component({
   selector: 'app-event-comment.',
@@ -20,10 +22,15 @@ import {
 export class EventCommentComponent {
   eventId = input.required<string>();
   eventService = inject(GroupEventService);
-  comments: MappedGroupEventComment[] = [];
+  comments: MappedComment[] = [];
+  commentType?: PostingComment;
 
   ngOnChanges() {
     this.loadComments();
+    this.commentType = {
+      typeId: this.eventId(),
+      typeName: CommentType.Event,
+    };
   }
 
   loadComments() {
@@ -37,18 +44,18 @@ export class EventCommentComponent {
     }
   }
 
-  onAddedComment($event: GroupEventCommentCreate) {
+  onAddedComment($event: CommentCreate) {
     this.loadComments();
   }
 
-  mapComments(data: GroupEventComment[]): MappedGroupEventComment[] {
-    let mappedComments: MappedGroupEventComment[] = [];
-    let replyMap: Record<string, MappedGroupEventComment[]> = {};
+  mapComments(data: GroupEventComment[]): MappedComment[] {
+    let mappedComments: MappedComment[] = [];
+    let replyMap: Record<string, MappedComment[]> = {};
 
     data.forEach((comment) => {
-      let mappedComment: MappedGroupEventComment = {
+      let mappedComment: MappedComment = {
         id: comment.id,
-        groupEventId: comment.groupEventId,
+        postingCommentTypeId: comment.groupEventId,
         senderId: comment.senderId,
         senderPhotoUrl: comment.sender.photoUrl,
         name: comment.sender.knownAs,
@@ -68,7 +75,7 @@ export class EventCommentComponent {
       }
     });
 
-    function assignReplies(comment: MappedGroupEventComment) {
+    function assignReplies(comment: MappedComment) {
       if (replyMap[comment.id]) {
         comment.reply = replyMap[comment.id];
         comment.reply.forEach(assignReplies);
@@ -76,8 +83,6 @@ export class EventCommentComponent {
     }
 
     mappedComments.forEach(assignReplies);
-
-    console.log(mappedComments);
 
     return mappedComments;
   }

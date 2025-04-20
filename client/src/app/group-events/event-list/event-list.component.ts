@@ -17,11 +17,10 @@ export class EventListComponent {
   groupEventService = inject(GroupEventService);
   statusOptions = GroupEventUserStatus;
 
-  constructor() {
-    this.groupEventService.groupParams().status = 'All';
-  }
+  constructor() {}
 
   ngOnInit(): void {
+    this.groupEventService.groupParams().status = 'All';
     this.loadEvents();
   }
 

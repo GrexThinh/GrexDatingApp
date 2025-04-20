@@ -28,6 +28,10 @@ namespace API.Helpers
             CreateMap<GroupEventCreateDto, GroupEvent>();
             CreateMap<GroupEventComment, GroupEventCommentDto>();
             CreateMap<GroupEventUser, GroupEventUserDto>();
+            CreateMap<GroupPostCreateDto, GroupPost>();
+            CreateMap<GroupPostComment, GroupPostCommentDto>();
+            CreateMap<GroupPostReaction, GroupPostReactionDto>();
+            CreateMap<GroupPost, GroupPostDto>();
         }
     }
 }

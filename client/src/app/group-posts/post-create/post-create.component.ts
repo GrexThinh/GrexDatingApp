@@ -1,6 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  Component,
+  HostListener,
+  inject,
+  input,
+  output,
+  ViewChild,
+} from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
+import { GroupPost } from '../../_models/groupPost';
+import { GroupPostService } from '../../_services/group-post.service';
+import { ToastrService } from 'ngx-toastr';
+import { User } from '../../_models/user';
 
 @Component({
   selector: 'app-post-create',
@@ -10,10 +21,25 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './post-create.component.css',
 })
 export class PostCreateComponent {
-  createPost() {
-    throw new Error('Method not implemented.');
+  @ViewChild('createForm') createForm?: NgForm;
+  @HostListener('window:beforeunload', ['$event']) notify($event: any) {
+    if (this.createForm?.dirty) {
+      $event.returnValue = true;
+    }
   }
+  groupPostService = inject(GroupPostService);
+  private toastr = inject(ToastrService);
+  currentUser = input.required<User | null>();
+  createdPost = output<GroupPost>();
+  post: GroupPost = new GroupPost();
   photoUrls: (string | ArrayBuffer | null)[] = [];
+
+  ngOnChanges() {
+    const userId = this.currentUser()?.id;
+    if (userId) {
+      this.post.userId = userId;
+    }
+  }
 
   onFileChange(event: any) {
     const files: FileList = event.target.files;
@@ -25,8 +51,28 @@ export class PostCreateComponent {
         };
         reader.readAsDataURL(file);
 
-        // this.group.groupPhotos.push({ file, isMainImage: false });
+        this.post.groupPostPhotos.push({ file });
       });
     }
+  }
+
+  createPost() {
+    console.log(this.post);
+    this.groupPostService.createGroupPost(this.post).subscribe({
+      next: (_) => {
+        this.toastr.success('Post created successfully!');
+        this.createdPost.emit(this.post);
+        this.createForm?.reset(this.post);
+        this.photoUrls = [];
+      },
+      error: (_) => {
+        this.toastr.error('Failed to create post');
+      },
+    });
+  }
+
+  cancelPost() {
+    this.createForm?.reset(this.post);
+    this.photoUrls = [];
   }
 }

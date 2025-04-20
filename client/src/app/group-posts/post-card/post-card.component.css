@@ -1,0 +1,9 @@
+.display-user-image {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+.display-image {
+    height: 250px;
+}

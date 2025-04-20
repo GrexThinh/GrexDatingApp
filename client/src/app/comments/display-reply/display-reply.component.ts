@@ -1,11 +1,9 @@
-import { Component, input, Input, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { AddReplyComponent } from '../add-reply/add-reply.component';
 import { CommonModule } from '@angular/common';
 import { TimeagoModule } from 'ngx-timeago';
-import {
-  GroupEventCommentCreate,
-  MappedGroupEventComment,
-} from '../../_models/groupEvent';
+import { CommentCreate, MappedComment } from '../../_models/groupEvent';
+import { PostingComment } from '../../_models/common';
 
 @Component({
   selector: 'app-display-reply',
@@ -15,15 +13,16 @@ import {
   styleUrl: './display-reply.component.css',
 })
 export class DisplayReplyComponent {
-  reply = input.required<MappedGroupEventComment>();
-  addedReply = output<GroupEventCommentCreate>();
+  reply = input.required<MappedComment>();
+  commentType = input.required<PostingComment | undefined>();
+  addedReply = output<CommentCreate>();
   isAddReply = false;
 
   replyBtnHandler() {
     this.isAddReply = true;
   }
 
-  onAddedReply($event: GroupEventCommentCreate) {
+  onAddedReply($event: CommentCreate) {
     this.addedReply.emit($event);
   }
 }

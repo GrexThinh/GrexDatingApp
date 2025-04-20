@@ -301,6 +301,9 @@ namespace API.Data.Migrations
                     b.Property<DateTime?>("EventStartTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("FanGroupId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -313,6 +316,8 @@ namespace API.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FanGroupId");
 
                     b.ToTable("GroupEvents");
                 });
@@ -408,6 +413,130 @@ namespace API.Data.Migrations
                     b.ToTable("GroupEventUsers");
                 });
 
+            modelBuilder.Entity("API.Entities.GroupPost", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte>("ActiveFlag")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("FanGroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FanGroupId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GroupPosts");
+                });
+
+            modelBuilder.Entity("API.Entities.GroupPostComment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte>("ActiveFlag")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("GroupPostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("SendDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("SenderDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("SenderId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupPostId");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("GroupPostComments");
+                });
+
+            modelBuilder.Entity("API.Entities.GroupPostReaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte>("ActiveFlag")
+                        .HasColumnType("tinyint");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("GroupPostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ReacterId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReactionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("ReactionType")
+                        .HasColumnType("tinyint");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupPostId");
+
+                    b.HasIndex("ReacterId");
+
+                    b.ToTable("GroupPostReactions");
+                });
+
             modelBuilder.Entity("API.Entities.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -472,6 +601,9 @@ namespace API.Data.Migrations
                     b.Property<Guid?>("GroupEventId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("GroupPostId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
@@ -489,6 +621,8 @@ namespace API.Data.Migrations
                     b.HasIndex("FanGroupId");
 
                     b.HasIndex("GroupEventId");
+
+                    b.HasIndex("GroupPostId");
 
                     b.ToTable("Photos");
                 });
@@ -641,6 +775,15 @@ namespace API.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("API.Entities.GroupEvent", b =>
+                {
+                    b.HasOne("API.Entities.FanGroup", "FanGroup")
+                        .WithMany("Events")
+                        .HasForeignKey("FanGroupId");
+
+                    b.Navigation("FanGroup");
+                });
+
             modelBuilder.Entity("API.Entities.GroupEventComment", b =>
                 {
                     b.HasOne("API.Entities.GroupEvent", "GroupEvent")
@@ -686,6 +829,68 @@ namespace API.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("API.Entities.GroupPost", b =>
+                {
+                    b.HasOne("API.Entities.FanGroup", "FanGroup")
+                        .WithMany("Posts")
+                        .HasForeignKey("FanGroupId");
+
+                    b.HasOne("API.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FanGroup");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("API.Entities.GroupPostComment", b =>
+                {
+                    b.HasOne("API.Entities.GroupPost", "GroupPost")
+                        .WithMany("Comments")
+                        .HasForeignKey("GroupPostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.GroupPostComment", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("API.Entities.AppUser", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("GroupPost");
+
+                    b.Navigation("Parent");
+
+                    b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("API.Entities.GroupPostReaction", b =>
+                {
+                    b.HasOne("API.Entities.GroupPost", "GroupPost")
+                        .WithMany("Reactions")
+                        .HasForeignKey("GroupPostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.AppUser", "Reacter")
+                        .WithMany()
+                        .HasForeignKey("ReacterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GroupPost");
+
+                    b.Navigation("Reacter");
+                });
+
             modelBuilder.Entity("API.Entities.Message", b =>
                 {
                     b.HasOne("API.Entities.AppUser", "Recipient")
@@ -719,11 +924,17 @@ namespace API.Data.Migrations
                         .WithMany("Photos")
                         .HasForeignKey("GroupEventId");
 
+                    b.HasOne("API.Entities.GroupPost", "GroupPost")
+                        .WithMany("Photos")
+                        .HasForeignKey("GroupPostId");
+
                     b.Navigation("AppUser");
 
                     b.Navigation("FanGroup");
 
                     b.Navigation("GroupEvent");
+
+                    b.Navigation("GroupPost");
                 });
 
             modelBuilder.Entity("API.Entities.UserLike", b =>
@@ -803,7 +1014,11 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.FanGroup", b =>
                 {
+                    b.Navigation("Events");
+
                     b.Navigation("Photos");
+
+                    b.Navigation("Posts");
                 });
 
             modelBuilder.Entity("API.Entities.Group", b =>
@@ -816,6 +1031,15 @@ namespace API.Data.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Photos");
+                });
+
+            modelBuilder.Entity("API.Entities.GroupPost", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Photos");
+
+                    b.Navigation("Reactions");
                 });
 #pragma warning restore 612, 618
         }

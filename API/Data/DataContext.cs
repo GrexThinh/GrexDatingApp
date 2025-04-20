@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace API.Data
 {
@@ -18,6 +19,9 @@ namespace API.Data
         public DbSet<GroupEvent> GroupEvents { get; set; }
         public DbSet<GroupEventUser> GroupEventUsers { get; set; }
         public DbSet<GroupEventComment> GroupEventComments { get; set; }
+        public DbSet<GroupPost> GroupPosts { get; set; }
+        public DbSet<GroupPostComment> GroupPostComments { get; set; }
+        public DbSet<GroupPostReaction> GroupPostReactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -67,6 +71,18 @@ namespace API.Data
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<GroupEventComment>()
+                .HasOne(g => g.Parent)
+                .WithMany()
+                .HasForeignKey(g => g.ParentId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<GroupPostComment>()
+                .HasOne(g => g.Sender)
+                .WithMany()
+                .HasForeignKey(g => g.SenderId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<GroupPostComment>()
                 .HasOne(g => g.Parent)
                 .WithMany()
                 .HasForeignKey(g => g.ParentId)

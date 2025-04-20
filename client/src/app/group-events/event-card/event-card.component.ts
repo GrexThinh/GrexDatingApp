@@ -38,7 +38,6 @@ export class EventCardComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['isDetailList']) {
       if (this.isDetailList()) {
-        console.log('run');
         this.groupEventService.getGroupEventUsers(this.event().id).subscribe({
           next: (data) => {
             this.evtUsers = data;

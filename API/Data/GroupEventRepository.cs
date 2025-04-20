@@ -65,7 +65,8 @@ namespace API.Data
                     Description = g.GroupEvent.Description!,
                     Photos = g.GroupEvent.Photos,
                     CurrentUserStatus = g.CurrentUserStatus,
-                });
+                })
+                .OrderByDescending(x => x.EventStartTime);
 
             return await PagedList<GroupEventDto>.CreateAsync(result, groupEventParams.PageNumber, groupEventParams.PageSize);
         }

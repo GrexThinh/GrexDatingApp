@@ -1,5 +1,5 @@
 import { CommonModule, NgClass } from '@angular/common';
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, output, ViewChild } from '@angular/core';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import {
   AccordionComponent,
@@ -19,6 +19,8 @@ import { EventModalComponent } from '../../modals/event-modal/event-modal.compon
 import { GroupEvent } from '../../_models/groupEvent';
 import { EventListComponent } from '../../group-events/event-list/event-list.component';
 import { PostListComponent } from '../../group-posts/post-list/post-list.component';
+import { PostCreateComponent } from '../../group-posts/post-create/post-create.component';
+import { GroupPost } from '../../_models/groupPost';
 
 @Component({
   selector: 'app-group-detail',
@@ -33,6 +35,7 @@ import { PostListComponent } from '../../group-posts/post-list/post-list.compone
     NgClass,
     EventListComponent,
     PostListComponent,
+    PostCreateComponent,
   ],
   templateUrl: './group-detail.component.html',
   styleUrl: './group-detail.component.css',
@@ -40,10 +43,11 @@ import { PostListComponent } from '../../group-posts/post-list/post-list.compone
 export class GroupDetailComponent {
   @ViewChild('staticTabs', { static: false }) staticTabs?: TabsetComponent;
   private groupService = inject(GroupService);
-  private accountService = inject(AccountService);
+  accountService = inject(AccountService);
   private route = inject(ActivatedRoute);
   private toastr = inject(ToastrService);
   private modalService = inject(BsModalService);
+  createdPost?: GroupPost;
   bsModalRef: BsModalRef<EventModalComponent> =
     new BsModalRef<EventModalComponent>();
   group?: FanGroup;
@@ -156,5 +160,8 @@ export class GroupDetailComponent {
     });
   }
 
+  onCreatedPost($event: GroupPost) {
+    this.createdPost = $event;
+  }
   onSlideRangeChange(indexes: number[] | void): void {}
 }

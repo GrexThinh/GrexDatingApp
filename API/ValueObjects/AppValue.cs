@@ -35,5 +35,13 @@
             CoHost = 2,
             Member = 3,
         }
+        public enum ReactionType : byte
+        {
+            Like = 1,
+            Love = 2,
+            Wow = 3,
+            Sad = 4,
+            Angry = 5
+        }
     }
 }

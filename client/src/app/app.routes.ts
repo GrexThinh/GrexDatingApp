@@ -17,6 +17,7 @@ import { GroupListComponent } from './groups/group-list/group-list.component';
 import { GroupCreateComponent } from './groups/group-create/group-create.component';
 import { GroupDetailComponent } from './groups/group-detail/group-detail.component';
 import { GroupEditComponent } from './groups/group-edit/group-edit.component';
+import { PostsComponent } from './posts/posts.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -39,6 +40,7 @@ export const routes: Routes = [
         component: MemberEditComponent,
         canDeactivate: [preventUnsavedChangesGuard],
       },
+      { path: 'home', component: PostsComponent },
       { path: 'lists', component: ListsComponent },
       { path: 'messages', component: MessagesComponent },
       {

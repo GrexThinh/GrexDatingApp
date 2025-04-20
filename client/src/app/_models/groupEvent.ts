@@ -81,18 +81,37 @@ export class GroupEventParams {
 export class GroupEventCommentCreate {
   groupEventId = '';
   content = '';
-  senderId = -1;
+  senderId = 0;
   parentId: string | undefined = undefined;
 }
 
-export interface MappedGroupEventComment {
+// export interface MappedGroupEventComment {
+//   id: string;
+//   groupEventId: string;
+//   senderId: number;
+//   senderDeleted: boolean;
+//   senderPhotoUrl: string;
+//   name: string;
+//   sendDate: string;
+//   content: string;
+//   reply: MappedGroupEventComment[];
+// }
+
+export class CommentCreate {
+  postingCommentTypeId = '';
+  content = '';
+  senderId = 0;
+  parentId: string | undefined = undefined;
+}
+
+export interface MappedComment {
   id: string;
-  groupEventId: string;
+  postingCommentTypeId: string;
   senderId: number;
   senderDeleted: boolean;
   senderPhotoUrl: string;
   name: string;
   sendDate: string;
   content: string;
-  reply: MappedGroupEventComment[];
+  reply: MappedComment[];
 }

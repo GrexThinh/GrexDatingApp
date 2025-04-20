@@ -11,13 +11,14 @@
         Reply
       </div>
     </div>
-    <app-add-reply *ngIf="isAddReply" [parentComment]="comment()" (addedReply)="onAddedReply($event)"></app-add-reply>
+    <app-add-reply *ngIf="isAddReply" [commentType]="commentType()" [parentComment]="comment()"  (addedReply)="onAddedReply($event)"></app-add-reply>
   </div>
 </div>
 
 <div class="reply-container" *ngIf="comment()['reply'].length > 0">
   <app-display-reply
     *ngFor="let reply of comment()['reply']"
+    [commentType]="commentType()"
     [reply]="reply"
     (addedReply)="onAddedReply($event)"
   ></app-display-reply>

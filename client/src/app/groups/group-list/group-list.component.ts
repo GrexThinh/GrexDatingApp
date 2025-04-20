@@ -25,12 +25,11 @@ export class GroupListComponent {
   typeOptions = ['Badminton', 'Football', 'Others'];
   statusOptions = GroupUserStatus;
 
-  constructor() {
-    this.groupService.groupParams().type = 'All';
-    this.groupService.groupParams().status = 'All';
-  }
+  constructor() {}
 
   ngOnInit(): void {
+    this.groupService.groupParams().type = 'All';
+    this.groupService.groupParams().status = 'All';
     this.loadGroups();
   }
 

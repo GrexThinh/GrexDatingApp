@@ -33,8 +33,8 @@
       </div>
       <div class="d-flex gap-3 align-items-center">
         <tabset #staticTabs>
-          <tab heading="Events"></tab>
           <tab heading="Posts"></tab>
+          <tab heading="Events"></tab>
           <tab heading="Messages"></tab>
         </tabset>
         <button
@@ -121,9 +121,12 @@
     </div>
     <div class="col-6">
       @if(staticTabs.tabs[0].active) {
-      <app-event-list [isDetailList]="true"></app-event-list>
+        <div class="d-flex flex-column gap-3">
+          <app-post-create [currentUser]="accountService.currentUser()" (createdPost)="onCreatedPost($event)"></app-post-create>
+          <app-post-list [createdPost]="createdPost"></app-post-list>
+        </div>
       } @if(staticTabs.tabs[1].active) {
-      <app-post-list></app-post-list>
+    <app-event-list [isDetailList]="true"></app-event-list>
       }
     </div>
     <div class="col-3">
