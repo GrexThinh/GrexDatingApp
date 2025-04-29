@@ -43,10 +43,10 @@ export class GroupEditComponent {
       next: (group) => {
         this.group = group;
         this.mainPhotoUrl =
-          this.group?.photos?.find((photo) => photo.isMain)?.url ||
+          this.group?.photos?.find((photo) => photo.isMain)?.url ??
           './assets/user.png';
         this.coverPhotoUrl =
-          this.group?.photos?.find((photo) => !photo.isMain)?.url ||
+          this.group?.photos?.find((photo) => !photo.isMain)?.url ??
           './assets/group.png';
       },
     });

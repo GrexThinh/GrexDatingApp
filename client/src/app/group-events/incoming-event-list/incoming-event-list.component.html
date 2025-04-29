@@ -1,0 +1,9 @@
+@if (events.length === 0) {
+    <p>No events found</p>
+} @else {
+<div class="d-flex flex-column gap-2">
+    @for (event of events; track event.id) {
+    <app-event-card [event]="event" [isDetailList]="false"></app-event-card>
+    }
+</div>
+}

@@ -32,10 +32,10 @@
         <h5 class="group-description">{{ joinedMembers.length }} Members</h5>
       </div>
       <div class="d-flex gap-3 align-items-center">
-        <tabset #staticTabs>
-          <tab heading="Posts"></tab>
-          <tab heading="Events"></tab>
-          <tab heading="Messages"></tab>
+        <tabset #groupTabs>
+          <tab heading="Posts" (selectTab)="onTabActivated($event)"></tab>
+          <tab heading="Events" (selectTab)="onTabActivated($event)"></tab>
+          <tab heading="Messages" (selectTab)="onTabActivated($event)"></tab>
         </tabset>
         <button
           type="button"
@@ -60,6 +60,34 @@
   <div class="row body-content">
     <div class="col-3">
       <accordion>
+        <accordion-group heading="Requesting members" [isOpen]="true">
+          <ul>
+            <li *ngIf="requestingMembers.length === 0">No members</li>
+            <li *ngFor="let item of requestingMembers">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  {{ item.member.knownAs + " - " + item.member.age + " yrs" }}
+                </div>
+                <div class="d-flex gap-1" *ngIf="isAdmin() || isModerator()">
+                  <button
+                    class="btn btn-success btn-sm"
+                    (click)="handleUpdateStatus(status.Joined, item.member.id)"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-sm"
+                    (click)="
+                      handleUpdateStatus(status.Rejected, item.member.id)
+                    "
+                  >
+                    Reject
+                  </button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </accordion-group>
         <accordion-group heading="Introduction" [isOpen]="true">
           {{ group?.description }}
         </accordion-group>
@@ -89,50 +117,30 @@
             </li>
           </ul>
         </accordion-group>
-        <accordion-group heading="Requesting members" [isOpen]="true">
-          <ul>
-            <li *ngIf="requestingMembers.length === 0">No members</li>
-            <li *ngFor="let item of requestingMembers">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  {{ item.member.knownAs + " - " + item.member.age + " yrs" }}
-                </div>
-                <div class="d-flex gap-1" *ngIf="isAdmin() || isModerator()">
-                  <button
-                    class="btn btn-success btn-sm"
-                    (click)="handleUpdateStatus(status.Joined, item.member.id)"
-                  >
-                    Accept
-                  </button>
-                  <button
-                    class="btn btn-secondary btn-sm"
-                    (click)="
-                      handleUpdateStatus(status.Rejected, item.member.id)
-                    "
-                  >
-                    Reject
-                  </button>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </accordion-group>
       </accordion>
     </div>
     <div class="col-6">
-      @if(staticTabs.tabs[0].active) {
-        <div class="d-flex flex-column gap-3">
-          <app-post-create [currentUser]="accountService.currentUser()" (createdPost)="onCreatedPost($event)"></app-post-create>
-          <app-post-list [createdPost]="createdPost"></app-post-list>
-        </div>
-      } @if(staticTabs.tabs[1].active) {
-    <app-event-list [isDetailList]="true"></app-event-list>
-      }
+      @if(selectedEventId) {
+      <app-event-detail [eventId]="selectedEventId"></app-event-detail>
+      } @else { @if(groupTabs.tabs[0].active) {
+      <div class="d-flex flex-column gap-3">
+        @if (group?.id) {
+        <app-post-create
+          [groupId]="group?.id"
+          [currentUser]="accountService.currentUser()"
+          (createdPost)="onCreatedPost($event)"
+        ></app-post-create>
+          <app-post-list [createdPost]="createdPost" [groupId]="group?.id"></app-post-list>
+        }
+      </div>
+      } @if(groupTabs.tabs[1].active) {
+      <app-event-list></app-event-list>
+      } }
     </div>
     <div class="col-3">
       <accordion>
-        <accordion-group heading="Incoming events" [isOpen]="true">
-          <app-event-list [isDetailList]="false"></app-event-list>
+        <accordion-group heading="Incoming & Happening events" [isOpen]="true">
+          <app-incoming-event-list></app-incoming-event-list>
         </accordion-group>
       </accordion>
     </div>

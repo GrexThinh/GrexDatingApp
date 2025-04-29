@@ -14,11 +14,29 @@ namespace API.Controllers
         public async Task<ActionResult<IEnumerable<GroupEventDto>>> GetGroupEvents([FromQuery] GroupEventParams groupEventParams)
         {
             int currentUserId = User.GetUserId();
-            var groups = await unitOfWork.GroupEventRepository.GetGroupEventsAsync(groupEventParams, currentUserId);
+            var events = await unitOfWork.GroupEventRepository.GetGroupEventsAsync(groupEventParams, currentUserId);
 
-            Response.AddPaginationHeader(groups);
+            Response.AddPaginationHeader(events);
 
-            return Ok(groups);
+            return Ok(events);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<GroupEventDto>> GetGroupEventDetailById(Guid id)
+        {
+            int currentUserId = User.GetUserId();
+            var evt = await unitOfWork.GroupEventRepository.GetGroupEventDetailByIdAsync(id, currentUserId);
+
+            return Ok(evt);
+        }
+
+        [HttpGet("incoming")]
+        public async Task<ActionResult<IEnumerable<GroupEventDto>>> GetIncomingGroupEvents()
+        {
+            int currentUserId = User.GetUserId();
+            var events = await unitOfWork.GroupEventRepository.GetIncomingGroupEventsAsync(currentUserId);
+
+            return Ok(events);
         }
 
         [HttpPost]
@@ -71,5 +89,24 @@ namespace API.Controllers
             return BadRequest("Failed to create event");
         }
 
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateGroupEvent(string id, GroupEventUpdateDto eventUpdateDto)
+        {
+            if (!Guid.TryParse(id, out var eventId))
+            {
+                return BadRequest("Invalid ID format.");
+            }
+
+            var evt = await unitOfWork.GroupEventRepository.GetGroupEventByIdAsync(eventId);
+
+            if (evt == null) return BadRequest("Could not find event");
+
+            mapper.Map(eventUpdateDto, evt);
+
+            if (await unitOfWork.Complete()) return NoContent();
+
+            return BadRequest("Failed to update the event");
+        }
     }
 }

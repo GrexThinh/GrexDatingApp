@@ -12,6 +12,8 @@ import { GroupPostService } from '../../_services/group-post.service';
 import { map } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { ReactionType } from '../../_enums/reaction';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { PostModalComponent } from '../../modals/post-modal/post-modal.component';
 
 @Component({
   selector: 'app-post-card',
@@ -32,8 +34,11 @@ import { ReactionType } from '../../_enums/reaction';
 export class PostCardComponent {
   postService = inject(GroupPostService);
   private toastr = inject(ToastrService);
-
+  private modalService = inject(BsModalService);
+  bsModalRef: BsModalRef<PostModalComponent> =
+    new BsModalRef<PostModalComponent>();
   post = input.required<GroupPost>();
+  localPost?: GroupPost;
   isViewComment = false;
   commentType?: PostingComment;
   comments: MappedComment[] = [];
@@ -42,6 +47,7 @@ export class PostCardComponent {
   totalReactions = 0;
 
   ngOnChanges() {
+    this.localPost = this.post();
     this.commentType = {
       typeId: this.post().id,
       typeName: CommentType.Post,
@@ -121,6 +127,27 @@ export class PostCardComponent {
         }
       },
       error: () => this.toastr.error('Failed to react'),
+    });
+  }
+
+  handleEditPost() {
+    const initialState: ModalOptions = {
+      class: 'modal-lg',
+      initialState: {
+        title: 'Update post',
+        isUpdated: false,
+        post: this.post(),
+      },
+    };
+    this.bsModalRef = this.modalService.show(PostModalComponent, initialState);
+    this.bsModalRef.onHide?.subscribe({
+      next: () => {
+        if (this.bsModalRef.content?.isUpdated) {
+          if (this.bsModalRef.content?.post) {
+            this.localPost = this.bsModalRef.content.post;
+          }
+        }
+      },
     });
   }
 }

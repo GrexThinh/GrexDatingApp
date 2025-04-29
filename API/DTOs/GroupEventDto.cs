@@ -11,17 +11,17 @@ namespace API.DTOs
         public DateTime? EventStartTime { get; set; }
         public DateTime? EventEndTime { get; set; }
         public string? Location { get; set; }
-        public IEnumerable<IFormFile> Files { get; set; }
+        public IEnumerable<IFormFile>? Files { get; set; }
     }
 
     public class GroupEventUpdateDto
     {
-        public required string Name { get; set; }
+        public string? Name { get; set; }
         public string? Description { get; set; }
         public DateTime? EventStartTime { get; set; }
         public DateTime? EventEndTime { get; set; }
         public string? Location { get; set; }
-        public IEnumerable<IFormFile> Files { get; set; }
+        //public IEnumerable<IFormFile>? Files { get; set; }
     }
 
     public class GroupEventParams : PaginationParams
@@ -43,8 +43,9 @@ namespace API.DTOs
     public class GroupEventDto
     {
         public Guid Id { get; set; }
+        public Guid? FanGroupId { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public byte ActiveFlag { get; set; }
         public string Location { get; set; }
         public DateTime? EventStartTime { get; set; }

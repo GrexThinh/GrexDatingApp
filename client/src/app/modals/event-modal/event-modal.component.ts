@@ -15,9 +15,9 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './event-modal.component.css',
 })
 export class EventModalComponent {
-  @ViewChild('createForm') createForm?: NgForm;
+  @ViewChild('eventForm') eventForm?: NgForm;
   @HostListener('window:beforeunload', ['$event']) notify($event: any) {
-    if (this.createForm?.dirty) {
+    if (this.eventForm?.dirty) {
       $event.returnValue = true;
     }
   }
@@ -26,8 +26,17 @@ export class EventModalComponent {
   private toastr = inject(ToastrService);
   title = '';
   isCreated = false;
+  isUpdated = false;
   event = new GroupEvent();
   photoUrl: string | ArrayBuffer | null = './assets/group.png';
+
+  ngOnInit() {
+    this.event.startEndTime = [
+      new Date(this.event.eventStartTime),
+      new Date(this.event.eventEndTime),
+    ];
+    this.photoUrl = this.event.photos[0].url ?? './assets/group.png';
+  }
 
   onFileChange(event: any) {
     const files: FileList = event.target.files;
@@ -45,16 +54,30 @@ export class EventModalComponent {
 
   submitEvent() {
     console.log(this.event);
-    this.eventService.createGroupEvent(this.event).subscribe({
-      next: (_) => {
-        this.toastr.success('Event created successfully!');
-        this.isCreated = true;
-        this.bsModalRef.hide();
-        this.createForm?.reset(this.event);
-      },
-      error: (err) => {
-        this.toastr.error('Event created fail!');
-      },
-    });
+    if (this.event.id) {
+      this.eventService.updateGroupEvent(this.event).subscribe({
+        next: (_) => {
+          this.toastr.success('Event updated successfully!');
+          this.isUpdated = true;
+          this.bsModalRef.hide();
+          this.eventForm?.reset(this.event);
+        },
+        error: (err) => {
+          this.toastr.error('Event updated fail!');
+        },
+      });
+    } else {
+      this.eventService.createGroupEvent(this.event).subscribe({
+        next: (_) => {
+          this.toastr.success('Event created successfully!');
+          this.isCreated = true;
+          this.bsModalRef.hide();
+          this.eventForm?.reset(this.event);
+        },
+        error: (err) => {
+          this.toastr.error('Event created fail!');
+        },
+      });
+    }
   }
 }

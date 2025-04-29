@@ -1,0 +1,47 @@
+
+<div class="card mb-3" style="max-width: 540px;" routerLink="/groups/{{ group().id }}" type="button">
+    <div class="row g-0">
+        <div class="col-md-5">
+            <img src="{{ group().photos[0].url || './assets/group.png' }}" class="img-fluid rounded-start h-100"
+                alt="photo">
+        </div>
+        <div class="col-md-7">
+            <div class="card-body">
+                <h6 class="card-title">{{ group().name }}</h6>
+                <p class="card-text fs-6"><i class="fa fa-map-marker"></i> {{ group().location }}</p>
+                <p class="card-text"><span class="badge bg-info text-light">{{ group().type }}</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="card border-danger mb-2">
+      <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+          <h6 class="card-title fw-bold text-truncate me-1">
+            {{ group.name }}
+          </h6>
+        </div>
+      </div>
+      <div
+        class="card bg-dark text-light"
+        type="button"
+        style="border-radius: 0"
+      >
+        <img
+          src="{{ group.photos[0].url || './assets/group.png' }}"
+          class="card-img opacity-75"
+          style="height: 130px; border-radius: 0"
+          alt="event-image"
+        />
+        <div class="card-img-overlay">
+          <div class="card-text mt-2 fs-6" style="font-size: smaller">
+            <i class="fa fa-map-marker"></i> {{ group.type }}
+          </div>
+        <div class="card-text mt-2 fs-6" style="font-size: smaller">
+            <i class="fa fa-map-marker"></i> {{ group.location }}
+        </div>
+        
+        </div>
+      </div>
+    /div> -->

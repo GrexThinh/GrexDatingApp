@@ -9,6 +9,7 @@ namespace API.DTOs
         public required int UserId { get; set; }
         public required string Content { get; set; }
         public string? Description { get; set; }
+        public Guid? FanGroupId { get; set; }
         public IEnumerable<IFormFile>? Files { get; set; }
     }
 
@@ -16,13 +17,12 @@ namespace API.DTOs
     {
         public required string Content { get; set; }
         public string? Description { get; set; }
-        public DateTime? PostStartTime { get; set; }
-        public DateTime? PostEndTime { get; set; }
-        public IEnumerable<IFormFile>? Files { get; set; }
+        // public IEnumerable<IFormFile>? Files { get; set; }
     }
 
     public class GroupPostParams : PaginationParams
     {
+        public Guid? FanGroupId { get; set; }
         public string? Content { get; set; }
         public DateTime? PostStartTime { get; set; }
         public DateTime? PostEndTime { get; set; }

@@ -1,0 +1,65 @@
+<form id="postForm" #postForm="ngForm" (ngSubmit)="submitEvent()">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{ title }}</h4>
+    <button
+      type="button"
+      class="btn-close close pull-right"
+      (click)="bsModalRef.hide()"
+    >
+      <span class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="d-flex align-items-center gap-2">
+      <img
+        class="display-user-image"
+        [src]="post.user.photoUrl"
+        [alt]="''"
+      />
+      <div>
+        <div class="fw-bold">{{ post.user.knownAs }}</div>
+        <div class="display-comment">
+          {{ "Public" }} <i class="fa fa-chevron-circle-down" style="color: blue"></i>
+        </div>
+      </div>
+    </div>
+    <textarea
+      name="content"
+      [(ngModel)]="post.content"
+      rows="3"
+      class="form-control"
+      placeholder="What's on your mind?"
+    ></textarea>
+
+    <div>
+      <div class="row g-1">
+        @for (photo of photoUrls; track $index) {
+        <!-- <div class="col-4"> -->
+          <img
+            [src]="photo"
+            alt="photo of main photo"
+            class="img-thumbnail main-img"
+          />
+        <!-- </div> -->
+        }
+      </div>
+      <div>
+        <input
+          id="mainFileInput"
+          type="file"
+          multiple
+          (change)="onFileChange($event)"
+          name="photos"
+        />
+      </div>
+    </div>
+    <label for="mainFileInput" class="btn btn-primary w-100 btn-sm"
+      >Upload photos</label
+    >
+  </div>
+  <div class="modal-footer">
+    <button [disabled]="!postForm.dirty" type="submit" class="btn btn-success">
+      Submit
+    </button>
+  </div>
+</form>

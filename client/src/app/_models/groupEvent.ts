@@ -5,6 +5,7 @@ import { GroupEventPhoto, Photo } from './photo';
 
 export interface GroupEvent {
   id: string;
+  fanGroupId?: string;
   name: string;
   description: string;
   location: string;
@@ -73,7 +74,7 @@ export class GroupEventParams {
   status = '';
   eventStartTime = '';
   eventEndTime = '';
-  startEndTime = [];
+  startEndTime: Date[] = [];
   pageNumber = 1;
   pageSize = 5;
 }

@@ -36,6 +36,9 @@
         } }
       </div>
     </div>
+    <button class="btn btn-secondary position-absolute end-0" (click)="handleEditEvent()">
+      <i class="fa fa-edit"></i> Edit
+    </button>
     <div class="card-body p-0">
       <div class="p-3">
         <div class="d-flex justify-content-between align-items-center">
@@ -52,11 +55,29 @@
             {{ getStatusName(status, event().currentUserStatus) }}
           </div>
         </div>
-        <p class="card-text">
-          <i class="fa fa-calendar-check-o text-success"></i>
-          {{ event().eventStartTime | date }} -
-          {{ event().eventEndTime | date }}
-        </p>
+        <div class="d-flex justify-content-between align-items-start mt-2">
+          <p class="card-text">
+            <i class="fa fa-calendar-check-o text-success"></i>
+            {{ event().eventStartTime | date }} -
+            {{ event().eventEndTime | date }}
+          </p>
+          <div
+            class="card-text badge"
+            [ngClass]="{
+              'bg-success': isIncomingEvent(),
+              'bg-info': isHappeningEvent(),
+              'bg-secondary': !isHappeningEvent() && !isIncomingEvent()
+            }"
+          >
+            {{
+              isIncomingEvent()
+                ? "Incoming"
+                : isHappeningEvent()
+                ? "Happening"
+                : "Passed"
+            }}
+          </div>
+        </div>
         <p class="card-text">
           <i class="fa fa-map-marker text-success"></i> {{ event().location }}
         </p>
@@ -123,7 +144,7 @@
   </div>
 </div>
 } @else {
-<div class="card border-danger mb-2">
+<div class="card border-danger mb-2" (click)="handleClickIncomingEvent()"  type="button">
   <div class="card-header">
     <div class="d-flex justify-content-between align-items-center">
       <h6 class="card-title fw-bold text-truncate me-1">{{ event().name }}</h6>
@@ -163,27 +184,46 @@
     <img
       src="{{ event().photos[0].url || './assets/group.png' }}"
       class="card-img opacity-50"
-      style="height: 120px;border-radius: 0"
+      style="height: 130px; border-radius: 0"
       alt="event-image"
     />
     <div class="card-img-overlay">
       <div class="card-text" style="font-size: smaller">
-        <i class="fa fa-calendar-check-o"></i> {{ event().eventStartTime | date : "short" }} -
+        <i class="fa fa-calendar-check-o"></i>
+        {{ event().eventStartTime | date : "short" }} -
         {{ event().eventEndTime | date : "short" }}
       </div>
+
       <div class="card-text mt-2" style="font-size: smaller">
-      <i class="fa fa-map-marker"></i> {{ event().location }}
+        <i class="fa fa-map-marker"></i> {{ event().location }}
       </div>
-      <div *ngIf="event().currentUserStatus" class="text-end">
+      <div class="d-flex justify-content-between align-items-center mt-2">
         <div
           class="card-text badge"
           [ngClass]="{
-            'bg-primary': event().currentUserStatus === status.Joined,
-            'bg-warning text-dark':
-              event().currentUserStatus === status.Interested
+            'bg-success': isIncomingEvent(),
+            'bg-info': isHappeningEvent()
           }"
         >
-          {{ getStatusName(status, event().currentUserStatus) }}
+          {{
+            isIncomingEvent()
+              ? "Incoming"
+              : isHappeningEvent()
+              ? "Happening"
+              : "Passed"
+          }}
+        </div>
+        <div *ngIf="event().currentUserStatus" class="text-end">
+          <div
+            class="card-text badge"
+            [ngClass]="{
+              'bg-primary': event().currentUserStatus === status.Joined,
+              'bg-warning text-dark':
+                event().currentUserStatus === status.Interested
+            }"
+          >
+            {{ getStatusName(status, event().currentUserStatus) }}
+          </div>
         </div>
       </div>
     </div>

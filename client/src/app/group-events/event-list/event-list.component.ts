@@ -4,20 +4,24 @@ import { GroupEventUserStatus } from '../../_enums/status';
 import { EventCardComponent } from '../event-card/event-card.component';
 import { FormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { GroupEvent } from '../../_models/groupEvent';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [EventCardComponent, FormsModule, BsDatepickerModule],
+  imports: [
+    EventCardComponent,
+    FormsModule,
+    BsDatepickerModule,
+    PaginationModule,
+  ],
   templateUrl: './event-list.component.html',
   styleUrl: './event-list.component.css',
 })
 export class EventListComponent {
-  isDetailList = input.required<boolean>();
   groupEventService = inject(GroupEventService);
   statusOptions = GroupEventUserStatus;
-
-  constructor() {}
 
   ngOnInit(): void {
     this.groupEventService.groupParams().status = 'All';
@@ -36,5 +40,8 @@ export class EventListComponent {
       this.groupEventService.groupParams().pageNumber = event.page;
       this.loadEvents();
     }
+  }
+  onUpdateEvent($event: GroupEvent) {
+    this.loadEvents();
   }
 }

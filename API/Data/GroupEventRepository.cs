@@ -58,6 +58,7 @@ namespace API.Data
                 .Select(g => new GroupEventDto
                 {
                     Id = g.GroupEvent.Id,
+                    FanGroupId = g.GroupEvent.FanGroupId,
                     Name = g.GroupEvent.Name,
                     Location = g.GroupEvent.Location,
                     EventStartTime = g.GroupEvent.EventStartTime,
@@ -71,9 +72,71 @@ namespace API.Data
             return await PagedList<GroupEventDto>.CreateAsync(result, groupEventParams.PageNumber, groupEventParams.PageSize);
         }
 
+        public async Task<GroupEventDto?> GetGroupEventDetailByIdAsync(Guid id, int currentUserId)
+        {
+
+            var evt = await context.GroupEvents
+               .Where(x => x.Id == id && x.ActiveFlag == (byte)ActiveFlag.Active)
+               .Include(x => x.Photos)
+               .SingleOrDefaultAsync();
+
+            if (evt == null) return null;
+
+            var userStatus = await context.GroupEventUsers
+                .Where(fgu => fgu.UserId == currentUserId && fgu.GroupEventId == id && fgu.ActiveFlag == (byte)ActiveFlag.Active)
+                .Select(fgu => fgu.Status)
+                .FirstOrDefaultAsync();
+
+            var result = new GroupEventDto
+            {
+                Id = evt.Id,
+                FanGroupId = evt.FanGroupId,
+                Name = evt.Name,
+                Location = evt.Location,
+                EventStartTime = evt.EventStartTime,
+                EventEndTime = evt.EventEndTime,
+                Description = evt.Description ?? string.Empty,
+                Photos = evt.Photos,
+                CurrentUserStatus = userStatus,
+            };
+
+            return result;
+        }
+
         public async Task<GroupEvent?> GetGroupEventByIdAsync(Guid id)
         {
             return await context.GroupEvents.SingleOrDefaultAsync(x => x.Id == id);
+        }
+
+        public Task<List<GroupEventDto>> GetIncomingGroupEventsAsync(int currentUserId)
+        {
+            var query = context.GroupEvents
+                .Where(x => x.EventStartTime >= DateTime.Now || x.EventEndTime >= DateTime.Now)
+                .AsQueryable();
+
+            var groupEventsWithUserStatus = query
+               .Join(context.GroupEventUsers
+                       .Where(fgu => fgu.UserId == currentUserId && fgu.ActiveFlag == (byte)ActiveFlag.Active),
+                   fg => fg.Id,
+                   fgu => fgu.GroupEventId,
+                   (fg, fgu) => new { GroupEvent = fg, CurrentUserStatus = fgu.Status })
+               .DefaultIfEmpty()
+               .Select(g => new GroupEventDto
+               {
+                   Id = g.GroupEvent.Id,
+                   FanGroupId = g.GroupEvent.FanGroupId,
+                   Name = g.GroupEvent.Name,
+                   Location = g.GroupEvent.Location,
+                   EventStartTime = g.GroupEvent.EventStartTime,
+                   EventEndTime = g.GroupEvent.EventEndTime,
+                   Description = g.GroupEvent.Description,
+                   Photos = g.GroupEvent.Photos,
+                   CurrentUserStatus = g.CurrentUserStatus
+               })
+               .OrderByDescending(x => x.EventStartTime)
+               .ToListAsync();
+
+            return groupEventsWithUserStatus;
         }
     }
 }

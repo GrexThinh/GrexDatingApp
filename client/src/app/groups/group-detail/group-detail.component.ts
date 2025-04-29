@@ -1,12 +1,12 @@
 import { CommonModule, NgClass } from '@angular/common';
-import { Component, inject, output, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import {
   AccordionComponent,
   AccordionPanelComponent,
 } from 'ngx-bootstrap/accordion';
-import { TabsetComponent, TabsModule } from 'ngx-bootstrap/tabs';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TabDirective, TabsetComponent, TabsModule } from 'ngx-bootstrap/tabs';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { GroupService } from '../../_services/group.service';
 import { FanGroup, FanGroupMember } from '../../_models/fanGroup';
 import { GroupUserStatus } from '../../_enums/status';
@@ -21,6 +21,8 @@ import { EventListComponent } from '../../group-events/event-list/event-list.com
 import { PostListComponent } from '../../group-posts/post-list/post-list.component';
 import { PostCreateComponent } from '../../group-posts/post-create/post-create.component';
 import { GroupPost } from '../../_models/groupPost';
+import { IncomingEventListComponent } from '../../group-events/incoming-event-list/incoming-event-list.component';
+import { EventDetailComponent } from '../../group-events/event-detail/event-detail.component';
 
 @Component({
   selector: 'app-group-detail',
@@ -36,17 +38,20 @@ import { GroupPost } from '../../_models/groupPost';
     EventListComponent,
     PostListComponent,
     PostCreateComponent,
+    IncomingEventListComponent,
+    EventDetailComponent,
   ],
   templateUrl: './group-detail.component.html',
   styleUrl: './group-detail.component.css',
 })
 export class GroupDetailComponent {
-  @ViewChild('staticTabs', { static: false }) staticTabs?: TabsetComponent;
+  @ViewChild('groupTabs', { static: true }) groupTabs?: TabsetComponent;
   private groupService = inject(GroupService);
   accountService = inject(AccountService);
   private route = inject(ActivatedRoute);
   private toastr = inject(ToastrService);
   private modalService = inject(BsModalService);
+  private router = inject(Router);
   createdPost?: GroupPost;
   bsModalRef: BsModalRef<EventModalComponent> =
     new BsModalRef<EventModalComponent>();
@@ -66,6 +71,8 @@ export class GroupDetailComponent {
     },
   ];
   events: GroupEvent[] = [];
+  activeTab?: TabDirective;
+  selectedEventId: string | null = null;
   getRoleName = getEnumName;
 
   ngOnInit(): void {
@@ -75,12 +82,47 @@ export class GroupDetailComponent {
         this.loadGroup(groupId);
       }
     });
+
+    this.route.queryParams.subscribe({
+      next: (params) => {
+        params['tab'] && this.selectTab(params['tab']);
+        if (params['tab'] === 'Events' && params['eventId']) {
+          this.selectedEventId = params['eventId'];
+        } else {
+          this.selectedEventId = null;
+        }
+      },
+    });
   }
 
   ngDoCheck() {
     this.member = this.joinedMembers.find(
       (x) => x.member.id === this.accountService.currentUser()?.id
     );
+  }
+
+  selectTab(heading: string) {
+    if (this.groupTabs) {
+      console.log(this.groupTabs.tabs);
+      const messageTab = this.groupTabs.tabs.find((x) => x.heading === heading);
+      if (messageTab) messageTab.active = true;
+    }
+  }
+
+  onTabActivated(data: TabDirective) {
+    this.activeTab = data;
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tab: this.activeTab.heading },
+      queryParamsHandling: 'merge',
+    });
+    if (this.activeTab.heading === 'Messages' && this.member) {
+      const user = this.accountService.currentUser();
+      if (!user) return;
+      // this.messageService.createHubConnection(user, this.member.userName);
+    } else {
+      // this.messageService.stopHubConnection();
+    }
   }
 
   loadGroup(id: string) {

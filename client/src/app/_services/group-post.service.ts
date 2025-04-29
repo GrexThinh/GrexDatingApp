@@ -29,6 +29,10 @@ export class GroupPostService {
       this.groupPostParams().pageSize
     );
 
+    if (this.groupPostParams().fanGroupId) {
+      params = params.append('fanGroupId', this.groupPostParams().fanGroupId);
+    }
+
     params = params.append('content', this.groupPostParams().content);
     params = params.append(
       'postStartTime',
@@ -51,6 +55,9 @@ export class GroupPostService {
   createGroupPost(post: GroupPost) {
     const formData = new FormData();
 
+    if (post.fanGroupId) {
+      formData.append('fanGroupId', post.fanGroupId);
+    }
     formData.append('content', post.content);
     formData.append('userId', post.userId.toString());
     formData.append('description', post.description);
@@ -84,6 +91,8 @@ export class GroupPostService {
   }
 
   toggleReaction(postId: string) {
-    return this.http.get<any>(this.baseUrl + `grouppostreaction/me/reaction/` + postId);
+    return this.http.get<any>(
+      this.baseUrl + `grouppostreaction/me/reaction/` + postId
+    );
   }
 }

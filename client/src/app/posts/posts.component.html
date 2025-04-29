@@ -1,81 +1,36 @@
 <div class="row g-5">
   <div class="col-3">
     <div class="d-flex justify-content-between align-items-center mb-2">
-        <h5>Your groups</h5>
-        <button class="btn btn-primary btn-sm">Create group</button>
+      <h5>Your groups</h5>
+      <button class="btn btn-primary btn-sm" routerLink="/groups/create">
+        Create group
+      </button>
     </div>
-    @for (group of groupService.paginatedResult()?.items; track group.id) {
-    <div class="card border-danger mb-2">
-      <div class="card-header">
-        <div class="d-flex justify-content-between align-items-center">
-          <h6 class="card-title fw-bold text-truncate me-1">
-            {{ group.name }}
-          </h6>
-          <!-- <div class="d-flex gap-1">
-                    @if (event().currentUserStatus !== status.Joined) {
-                    <button class="btn btn-warning btn-sm" (click)="actEvent(status.Interested)">
-                        <i class="fa" [ngClass]="{
-                  'fa-star-o': event().currentUserStatus === null,
-                  'fa-times text-dark':
-                    event().currentUserStatus === status.Interested
-                }"></i>
-                    </button>
-                    } @if (event().currentUserStatus !== status.Interested) {
-                    <button class="btn btn-primary btn-sm" (click)="actEvent(status.Joined)">
-                        <i class="fa" [ngClass]="{
-                  'fa-sign-in': event().currentUserStatus === null,
-                  'fa-times': event().currentUserStatus === status.Joined
-                }"></i>
-                    </button>
-                    }
-                </div> -->
-        </div>
-      </div>
-      <div
-        class="card bg-dark text-light"
-        type="button"
-        style="border-radius: 0"
-      >
-        <img
-          src="{{ group.photos[0].url || './assets/group.png' }}"
-          class="card-img opacity-75"
-          style="height: 130px; border-radius: 0"
-          alt="event-image"
-        />
-        <div class="card-img-overlay">
-          <div class="card-text mt-2 fs-6" style="font-size: smaller">
-            <i class="fa fa-map-marker"></i> {{ group.type }}
-          </div>
-        <div class="card-text mt-2 fs-6" style="font-size: smaller">
-            <i class="fa fa-map-marker"></i> {{ group.location }}
-        </div>
-          <!-- <div *ngIf="event().currentUserStatus" class="text-end">
-                    <div class="card-text badge" [ngClass]="{
-                'bg-primary': event().currentUserStatus === status.Joined,
-                'bg-warning text-dark':
-                  event().currentUserStatus === status.Interested
-              }">
-                        {{ getStatusName(status, event().currentUserStatus) }}
-                    </div>
-                </div> -->
-        </div>
-      </div>
-    </div>
-    }
+    @for (group of groupService.paginatedResult()?.items; track group.id) { @if
+    (group.currentUserStatus === groupStatus.Waiting || group.currentUserStatus
+    === groupStatus.Joined ) {
+    <app-group-card-home [group]="group"></app-group-card-home>
+    } }
   </div>
   <div class="col-6">
     <app-post-create
+      [groupId]="undefined"
       [currentUser]="accountService.currentUser()"
       (createdPost)="onCreatedPost($event)"
     ></app-post-create>
     <div class="mt-3">
-      <app-post-list [createdPost]="createdPost"></app-post-list>
+      <app-post-list
+        [createdPost]="createdPost"
+        [groupId]="undefined"
+      ></app-post-list>
     </div>
   </div>
   <div class="col-3">
     <div class="d-flex justify-content-between align-items-center mb-2">
-        <h5>Events</h5>
-        <button class="btn btn-primary btn-sm">Create event</button>
+      <h5>Events</h5>
+      <button class="btn btn-primary btn-sm" (click)="handleCreateEvent()">
+        Create event
+      </button>
     </div>
     @for (event of eventService.paginatedResult()?.items; track event.id) {
     <app-event-card [event]="event" [isDetailList]="false"></app-event-card>
@@ -99,18 +54,21 @@
         <div></div>
       </div>
       <hr />
-      <div class="d-flex gap-3">
-        <div>Name</div>
-        <div></div>
-      </div>
-      <div class="d-flex gap-3">
-        <div>Name</div>
-        <div></div>
-      </div>
-      <div class="d-flex gap-3">
-        <div>Name</div>
-        <div></div>
-      </div>
+      @for (member of likesService.paginatedResult()?.items; track member.id) {
+    
+        <div class="d-flex gap-2 align-items-center py-2" type="button">
+          <img
+            src="{{ member?.photoUrl ?? './assets/user.png' }}"
+            alt=""
+            class="user-img"
+          />
+          <div>{{ member.knownAs }}</div>
+          <div [class.is-online]="isOnline(member.userName)">
+            <i class="fa fa-dot"></i>
+          </div>
+        </div>
+
+      }
       <div class="d-flex gap-3 mt-3">
         <div>Groups</div>
         <div></div>

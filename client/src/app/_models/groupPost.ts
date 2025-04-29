@@ -57,6 +57,7 @@ export class GroupPost {
 }
 
 export class GroupPostParams {
+  fanGroupId = '';
   content = '';
   postStartTime = '';
   postEndTime = '';

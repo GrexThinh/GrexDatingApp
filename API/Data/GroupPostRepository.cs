@@ -3,7 +3,6 @@ using API.Entities;
 using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using static API.ValueObjects.AppValue;
 
@@ -19,6 +18,15 @@ namespace API.Data
         public async Task<PagedList<GroupPostDto>> GetGroupPostsAsync(GroupPostParams groupPostParams, int currentUserId)
         {
             var query = context.GroupPosts.AsQueryable();
+
+            if (groupPostParams.FanGroupId != null)
+            {
+                query = query.Where(x => x.FanGroupId == groupPostParams.FanGroupId);
+            }
+            else
+            {
+                query = query.Where(x => x.FanGroupId == null);
+            }
 
             if (groupPostParams.Content != null)
             {
@@ -37,6 +45,7 @@ namespace API.Data
 
             var result = query.OrderByDescending(x => x.CreateDate)
                 .Include(x => x.User)
+                .ThenInclude(x => x.Photos)
                 .Include(x => x.FanGroup)
                 .Include(x => x.Comments)
                 .Include(x => x.Reactions)

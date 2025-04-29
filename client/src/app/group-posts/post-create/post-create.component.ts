@@ -30,6 +30,7 @@ export class PostCreateComponent {
   groupPostService = inject(GroupPostService);
   private toastr = inject(ToastrService);
   currentUser = input.required<User | null>();
+  groupId = input.required<string | undefined>();
   createdPost = output<GroupPost>();
   post: GroupPost = new GroupPost();
   photoUrls: (string | ArrayBuffer | null)[] = [];
@@ -58,6 +59,7 @@ export class PostCreateComponent {
 
   createPost() {
     console.log(this.post);
+    if (this.groupId()) this.post.fanGroupId = this.groupId();
     this.groupPostService.createGroupPost(this.post).subscribe({
       next: (_) => {
         this.toastr.success('Post created successfully!');

@@ -12,8 +12,14 @@
           <i class="fa fa-users"></i>
         </button>
       </li>
-    }
-      @if (group().currentUserStatus != statusOptions.Banned) {
+      @if (hasJoined()) {
+      <li class="list-inline-item">
+        <button routerLink="/groups/{{ group().id }}" [queryParams]="{ tab: 'Messages' }" class="btn btn-primary">
+          <i class="fa fa-envelope"></i>
+        </button>
+      </li>
+      }
+      } @if (group().currentUserStatus != statusOptions.Banned) {
       <li class="list-inline-item">
         <button (click)="toggleJoin()" class="btn btn-primary">
           @if (hasJoined()) {<i class="fa fa-times"></i>} @else if
@@ -22,26 +28,18 @@
           } @else {<i class="fa fa-sign-in"></i>}
         </button>
       </li>
-      } @if (hasJoined()) {
-      <li class="list-inline-item">
-        <button
-          routerLink="/groups/{{ group().id }}"
-          [queryParams]="{ tab: 'Messages' }"
-          class="btn btn-primary"
-        >
-          <i class="fa fa-envelope"></i>
-        </button>
-      </li>
-      }
+      } 
     </ul>
   </div>
   <div class="card-body p-1">
     <h6 class="card-title text-center mb-1">
-      <span [class.is-online]="true">
-        <i class="fa fa-users me-2"></i>
-      </span>
-      {{ group().name + ", " + group().location }}
+      {{ group().name }}
     </h6>
-    <p class="card-text text-muted text-center">{{ group().type }}</p>
+    <div class="card-text text-muted text-center">
+      <i class="fa fa-map-marker"></i> {{ group().location }}
+    </div>
+    <p class="card-text text-muted text-center">
+      <span class="badge bg-info text-light">{{ group().type }}</span>
+    </p>
   </div>
 </div>

@@ -25,6 +25,10 @@ export class GroupEventService {
     this.groupParams.set(new GroupEventParams());
   }
 
+  getIncomingGroupEvents() {
+    return this.http.get<GroupEvent[]>(this.baseUrl + 'groupevent/incoming');
+  }
+
   getGroupEvents() {
     let params = setPaginationHeaders(
       this.groupParams().pageNumber,
@@ -33,8 +37,20 @@ export class GroupEventService {
 
     params = params.append('name', this.groupParams().name);
     params = params.append('location', this.groupParams().location);
-    params = params.append('eventStartTime', this.groupParams().eventStartTime);
-    params = params.append('eventEndTime', this.groupParams().eventEndTime);
+
+    if (this.groupParams().startEndTime[0]) {
+      const startTime = this.groupParams()
+        .startEndTime[0].toISOString()
+        .slice(0, 19);
+      params = params.append('eventStartTime', startTime);
+    }
+
+    if (this.groupParams().startEndTime[1]) {
+      const endTime = this.groupParams()
+        .startEndTime[1].toISOString()
+        .slice(0, 19);
+      params = params.append('eventEndTime', endTime);
+    }
 
     if (this.groupParams().status !== 'All') {
       params = params.append('status', this.groupParams().status);
@@ -52,9 +68,9 @@ export class GroupEventService {
       });
   }
 
-  // getFanGroup(groupId: string) {
-  //   return this.http.get<GroupEvent>(this.baseUrl + 'fangroup/' + groupId);
-  // }
+  getGroupEventById(eventId: string) {
+    return this.http.get<GroupEvent>(this.baseUrl + 'groupevent/' + eventId);
+  }
 
   createGroupEvent(event: GroupEvent) {
     const formData = new FormData();
@@ -73,9 +89,15 @@ export class GroupEventService {
   }
 
   updateGroupEvent(event: GroupEvent) {
+    const payload = {
+      ...event,
+      eventStartTime: event.startEndTime[0].toISOString(),
+      eventEndTime: event.startEndTime[1].toISOString(),
+      files: [],
+    };
     return this.http.put<GroupEvent>(
       this.baseUrl + 'groupevent/' + event.id,
-      event
+      payload
     );
   }
 

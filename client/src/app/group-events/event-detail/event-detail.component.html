@@ -1,0 +1,10 @@
+<div>
+  <a href="" routerLink="/groups/{{ event?.fanGroupId }}"
+    ><i class="fa fa-left-arrow"></i> Back to all events</a
+  >
+  @if(event) {
+  <div class="mt-2">
+    <app-event-card [event]="event" [isDetailList]="true"></app-event-card>
+  </div>
+  }
+</div>

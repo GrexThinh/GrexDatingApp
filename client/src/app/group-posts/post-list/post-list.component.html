@@ -2,4 +2,13 @@
   @for (post of groupPostService.paginatedResult()?.items; track post.id) {
   <app-post-card [post]="post"></app-post-card>
   }
+  @if (groupPostService.paginatedResult()?.pagination) {
+  <div class="d-flex justify-content-end">
+    <pagination [boundaryLinks]="true" [totalItems]="(groupPostService.paginatedResult()?.pagination)!.totalItems"
+      [itemsPerPage]="(groupPostService.paginatedResult()?.pagination)!.itemsPerPage" (pageChanged)="pageChanged($event)"
+      [(ngModel)]="(groupPostService.paginatedResult()?.pagination)!.currentPage" [maxSize]="10" previousText="&lsaquo;"
+      nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+    </pagination>
+  </div>
+  }
 </div>

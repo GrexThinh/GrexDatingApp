@@ -57,5 +57,24 @@ namespace API.Controllers
             return BadRequest("Failed to create post");
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateGroupPost(string id, GroupPostUpdateDto postUpdateDto)
+        {
+            if (!Guid.TryParse(id, out var postId))
+            {
+                return BadRequest("Invalid ID format.");
+            }
+
+            var post = await unitOfWork.GroupPostRepository.GetGroupPostByIdAsync(postId);
+
+            if (post == null) return BadRequest("Could not find post");
+
+            mapper.Map(postUpdateDto, post);
+
+            if (await unitOfWork.Complete()) return NoContent();
+
+            return BadRequest("Failed to update the post");
+        }
+
     }
 }
