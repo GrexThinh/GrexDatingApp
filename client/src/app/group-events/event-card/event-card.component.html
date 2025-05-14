@@ -6,7 +6,7 @@
         src="{{ event().photos[0].url || './assets/group.png' }}"
         class="card-img-top"
         style="height: 170px"
-        alt="event-image"
+        alt="photo"
       />
       <div class="act-btn position-absolute bottom-0 end-0 d-flex gap-2">
         @if (event().currentUserStatus !== status.Joined) { @if
@@ -95,7 +95,7 @@
             @for (item of evtUsers; track item.id) {
             <img
               src="{{ item.user.photoUrl }}"
-              alt="user-photo"
+              alt="photo"
               class="user-img"
               [tooltip]="popTemplate"
             />
@@ -185,7 +185,7 @@
       src="{{ event().photos[0].url || './assets/group.png' }}"
       class="card-img opacity-50"
       style="height: 130px; border-radius: 0"
-      alt="event-image"
+      alt="photo"
     />
     <div class="card-img-overlay">
       <div class="card-text" style="font-size: smaller">

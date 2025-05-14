@@ -13,7 +13,7 @@
       <slide *ngFor="let slide of coverPhotoUrls; let index = index">
         <img
           [src]="slide.image"
-          alt="image slide"
+          alt="photo"
           style="
             display: block;
             width: 100%;
@@ -25,7 +25,7 @@
         <div class="carousel-caption"></div>
       </slide>
     </carousel>
-    <img src="{{ mainPhotoUrl }}" alt="group-avatar" class="group-avatar" />
+    <img src="{{ mainPhotoUrl }}" alt="photo" class="group-avatar" />
     <div class="group-info">
       <div>
         <h1>{{ group?.name }}</h1>
@@ -130,12 +130,20 @@
           [currentUser]="accountService.currentUser()"
           (createdPost)="onCreatedPost($event)"
         ></app-post-create>
-          <app-post-list [createdPost]="createdPost" [groupId]="group?.id"></app-post-list>
+        <app-post-list
+          [createdPost]="createdPost"
+          [groupId]="group?.id"
+        ></app-post-list>
         }
       </div>
       } @if(groupTabs.tabs[1].active) {
       <app-event-list></app-event-list>
-      } }
+      } @if(groupTabs.tabs[2].active) { @if (group?.id) {
+      <app-group-message
+        [currentUser]="accountService.currentUser()"
+        [groupId]="group?.id"
+      ></app-group-message>
+      } } }
     </div>
     <div class="col-3">
       <accordion>

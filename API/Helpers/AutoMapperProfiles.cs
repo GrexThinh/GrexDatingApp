@@ -34,6 +34,8 @@ namespace API.Helpers
             CreateMap<GroupPostComment, GroupPostCommentDto>();
             CreateMap<GroupPostReaction, GroupPostReactionDto>();
             CreateMap<GroupPost, GroupPostDto>();
+            CreateMap<GroupMessage, GroupMessageDto>()
+                  .ForMember(d => d.SenderPhotoUrl, o => o.MapFrom(s => s.Sender.Photos.FirstOrDefault(x => x.IsMain)!.Url));
         }
     }
 }

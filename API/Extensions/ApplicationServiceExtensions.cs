@@ -36,6 +36,7 @@ namespace API.Extensions
             services.AddScoped<IGroupPostRepository, GroupPostRepository>();
             services.AddScoped<IGroupPostCommentRepository, GroupPostCommentRepository>();
             services.AddScoped<IGroupPostReactionRepository, GroupPostReactionRepository>();
+            services.AddScoped<IGroupMessageRepository, GroupMessageRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<LogUserActivity>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

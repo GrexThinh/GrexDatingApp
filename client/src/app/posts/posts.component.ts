@@ -14,6 +14,10 @@ import { GroupCardHomeComponent } from '../groups/group-card-home/group-card-hom
 import { GroupUserStatus } from '../_enums/status';
 import { LikesService } from '../_services/likes.service';
 import { PresenceService } from '../_services/presence.service';
+import { FanGroup } from '../_models/fanGroup';
+import { MessageBoxComponent } from '../messages/message-box/message-box.component';
+import { Member } from '../_models/member';
+import { MessageGroupBoxComponent } from "../messages/message-group-box/message-group-box.component";
 
 @Component({
   selector: 'app-posts',
@@ -24,7 +28,9 @@ import { PresenceService } from '../_services/presence.service';
     EventCardComponent,
     RouterLink,
     GroupCardHomeComponent,
-  ],
+    MessageBoxComponent,
+    MessageGroupBoxComponent
+],
   templateUrl: './posts.component.html',
   styleUrl: './posts.component.css',
 })
@@ -39,6 +45,8 @@ export class PostsComponent {
     new BsModalRef<EventModalComponent>();
   groupStatus = GroupUserStatus;
   createdPost?: GroupPost;
+  otherUser?: Member;
+  selectedGroup?: FanGroup;
   isOpenMessage = true;
   pageNumber = 1;
   pageSize = 5;
@@ -64,11 +72,19 @@ export class PostsComponent {
     this.likesService.getLikes('liked', this.pageNumber, this.pageSize);
   }
 
-  isOnline = (userName: string) =>
-    computed(() => this.presenceService.onlineUsers().includes(userName));
+  isOnline = (userName: string) => {
+    return computed(() =>
+      this.presenceService.onlineUsers().includes(userName)
+    );
+  };
 
   toggleMessage() {
     this.isOpenMessage = !this.isOpenMessage;
+  }
+
+  getMainGroupPhoto(group: FanGroup): string {
+    const mainPhoto = group?.photos?.find((photo) => photo.isMain);
+    return mainPhoto?.url ?? './assets/group.png';
   }
 
   handleCreateEvent() {
@@ -91,4 +107,20 @@ export class PostsComponent {
   }
 
   onCreatedPost($event: GroupPost) {}
+
+  selectOtherUser(member: Member): void {
+    this.otherUser = member;
+  }
+
+  onCloseUserBox(event: boolean) {
+    this.otherUser = undefined;
+  }
+
+  selectGroup(group: FanGroup): void {
+    this.selectedGroup = group;
+  }
+
+  onCloseGroupBox(event: boolean) {
+    this.selectedGroup = undefined;
+  }
 }

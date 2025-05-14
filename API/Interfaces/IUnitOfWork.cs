@@ -13,6 +13,7 @@
         IGroupPostRepository GroupPostRepository { get; }
         IGroupPostCommentRepository GroupPostCommentRepository { get; }
         IGroupPostReactionRepository GroupPostReactionRepository { get; }
+        IGroupMessageRepository GroupMessageRepository { get; }
         Task<bool> Complete();
         bool HasChanges();
     }

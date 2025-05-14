@@ -22,6 +22,7 @@ namespace API.Data
         public DbSet<GroupPost> GroupPosts { get; set; }
         public DbSet<GroupPostComment> GroupPostComments { get; set; }
         public DbSet<GroupPostReaction> GroupPostReactions { get; set; }
+        public DbSet<GroupMessage> GroupMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

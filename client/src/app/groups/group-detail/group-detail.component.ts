@@ -23,6 +23,9 @@ import { PostCreateComponent } from '../../group-posts/post-create/post-create.c
 import { GroupPost } from '../../_models/groupPost';
 import { IncomingEventListComponent } from '../../group-events/incoming-event-list/incoming-event-list.component';
 import { EventDetailComponent } from '../../group-events/event-detail/event-detail.component';
+import { GroupMessageComponent } from '../../group-messages/group-message/group-message.component';
+import { GroupMessageService } from '../../_services/group-message.service';
+import { HubConnectionState } from '@microsoft/signalr';
 
 @Component({
   selector: 'app-group-detail',
@@ -40,6 +43,7 @@ import { EventDetailComponent } from '../../group-events/event-detail/event-deta
     PostCreateComponent,
     IncomingEventListComponent,
     EventDetailComponent,
+    GroupMessageComponent,
   ],
   templateUrl: './group-detail.component.html',
   styleUrl: './group-detail.component.css',
@@ -47,6 +51,7 @@ import { EventDetailComponent } from '../../group-events/event-detail/event-deta
 export class GroupDetailComponent {
   @ViewChild('groupTabs', { static: true }) groupTabs?: TabsetComponent;
   private groupService = inject(GroupService);
+  private groupMessageService = inject(GroupMessageService);
   accountService = inject(AccountService);
   private route = inject(ActivatedRoute);
   private toastr = inject(ToastrService);
@@ -76,8 +81,9 @@ export class GroupDetailComponent {
   getRoleName = getEnumName;
 
   ngOnInit(): void {
+    let groupId: string | null = null;
     this.route.paramMap.subscribe((params) => {
-      const groupId = params.get('id');
+      groupId = params.get('id');
       if (groupId) {
         this.loadGroup(groupId);
       }
@@ -90,6 +96,19 @@ export class GroupDetailComponent {
           this.selectedEventId = params['eventId'];
         } else {
           this.selectedEventId = null;
+          if (params['tab'] === 'Messages') {
+            const user = this.accountService.currentUser();
+            if (!user || !groupId) return;
+            if (
+              this.groupMessageService.hubConnection?.state ===
+              HubConnectionState.Connected
+            ) {
+              this.groupMessageService.hubConnection.stop().then(() => {
+                if (!groupId) return;
+                this.groupMessageService.createHubConnection(user, groupId);
+              });
+            } else this.groupMessageService.createHubConnection(user, groupId);
+          }
         }
       },
     });
@@ -103,7 +122,6 @@ export class GroupDetailComponent {
 
   selectTab(heading: string) {
     if (this.groupTabs) {
-      console.log(this.groupTabs.tabs);
       const messageTab = this.groupTabs.tabs.find((x) => x.heading === heading);
       if (messageTab) messageTab.active = true;
     }
@@ -116,13 +134,6 @@ export class GroupDetailComponent {
       queryParams: { tab: this.activeTab.heading },
       queryParamsHandling: 'merge',
     });
-    if (this.activeTab.heading === 'Messages' && this.member) {
-      const user = this.accountService.currentUser();
-      if (!user) return;
-      // this.messageService.createHubConnection(user, this.member.userName);
-    } else {
-      // this.messageService.stopHubConnection();
-    }
   }
 
   loadGroup(id: string) {
