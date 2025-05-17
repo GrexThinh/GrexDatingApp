@@ -28,11 +28,11 @@ export class LikesService {
         observe: 'response',
         params,
       })
-      .subscribe({
-        next: (response) => {
-          setPaginatedRespone(response, this.paginatedResult);
-        },
-      });
+      // .subscribe({
+      //   next: (response) => {
+      //     setPaginatedRespone(response, this.paginatedResult);
+      //   },
+      // });
   }
 
   getLikeIds() {

@@ -40,11 +40,11 @@ export class GroupService {
         observe: 'response',
         params,
       })
-      .subscribe({
-        next: (response) => {
-          setPaginatedRespone(response, this.paginatedResult);
-        },
-      });
+      // .subscribe({
+      //   next: (response) => {
+      //     setPaginatedRespone(response, this.paginatedResult);
+      //   },
+      // });
   }
 
   getFanGroup(groupId: string) {

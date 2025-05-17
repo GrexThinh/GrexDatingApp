@@ -1,5 +1,5 @@
 <div class="card h-100" style="width: 350px; max-height: 400px;">
-    <div class="card-header d-flex align-items-center justify-content-between bg-success text-light">
+    <div class="card-header d-flex align-items-center justify-content-between bg-info text-light">
         <div class="d-flex gap-2 align-items-center">
             <img src="{{ selectedGroup().photos[0].url }}" alt="photo" class="user-img" />
             <div>{{ selectedGroup().name }}</div>
@@ -41,9 +41,9 @@
         <form #messageForm="ngForm" (ngSubmit)="sendMessage()">
             <div class="input-group">
                 <input name="messageContent" required [(ngModel)]="messageContent" type="text"
-                    class="form-control input-sm" placeholder="Send a private message">
+                    class="form-control input-sm" placeholder="Send a private message" style="border-radius: 0;">
                 <div class="input-group-append">
-                    <button [disabled]="!messageForm.valid" class="btn btn-primary" type="submit">Send</button>
+                    <button [disabled]="!messageForm.valid" class="btn btn-primary" type="submit" style="border-radius: 0;">Send</button>
                 </div>
             </div>
         </form>
